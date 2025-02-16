@@ -11,7 +11,7 @@ Penginstalan Pada Termux
 - pkg upgrade -y && pkg update -y
 - pkg install nodejs -y
 - pkg install git -y
-- git clone https://github.com/MaouDabi0/BaseBot
+- git clone         https://github.com/MaouDabi0/BaseBot
 - npm install && npm start
 
 NOTE:// Gunakan script ini dengan bijak
