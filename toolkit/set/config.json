@@ -1,1 +1,8 @@
-p
+{
+  "ownerNumber": [""],
+  "ownerName": "Kaju",
+  "botName": "DabiChan",
+  "botFullName": "Dabi Chan Ai",
+  "type": "plugin",
+  "thumbnail": "https://files.catbox.moe/7t0628.jpg"
+}
