@@ -123,7 +123,7 @@ const startBot = async () => {
           message.message.extendedTextMessage?.text ||
           '[Media Terkirim]';
 
-        console.log(chalk.cyan(`📩 Pesan dari: ${chalk.bold(sender)}`));
+        console.log(chalk.yellow.bold(`【 📩 Pesan dari 】: ${chalk.bold(sender)}`));
         console.log(chalk.green(`💬 ${textMessage}\n`));
 
         // Menjalankan plugin berdasarkan pesan
