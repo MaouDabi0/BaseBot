@@ -7,4 +7,9 @@ Tentu saja Script ini bisa terhubung dengan akun/nomor WhatsApp anda, Berikut ad
 - Type Plugins
 - Menggunakan Code CJS
 
+Penginstalan Pada Termux
+- pkg upgrade -y && pkg update -y
+- pkg install nodejs -y
+- pkg install git -y
+- git clone 
 NOTE:// Gunakan script ini dengan bijak
