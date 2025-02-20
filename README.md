@@ -4,7 +4,8 @@
 <img src="https://files.catbox.moe/8hj5gf.jpg">
 
 ## Salam
-   Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp,  dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.
+   Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp. 
+   Dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.
 
    Tentu saja Script ini bisa terhubung dengan akun/nomor WhatsApp anda, Berikut adalah beberapa spesifikasi tentang script BaseBot ini:
 
@@ -56,11 +57,11 @@ git clone https://github.com/MaouDabi0/BaseBot
    git clone https://github.com/MaouDabi0/BaseBot,
    langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
    
-```bash
-cd BaseBot
-```
+   ```bash
+   cd BaseBot
+   ```
 
-   jika pada tampilan termux sudah seperti ini 
+    jika pada tampilan termux sudah seperti ini 
    ~/BaseBot $, maka langkah selanjutnya adalah
 
 2. Node Package Meneger
