@@ -81,4 +81,4 @@ npm start
    Perangkat tertaut
 
 NOTE:// Gunakan script ini dengan bijak
-![Create: MaouDabi](https://img.shields.io/badge/status-inactive-red.svg)
+![Create: MaouDabi](https://img.shields.io/badge/Created%3A%20MaouDabi)
