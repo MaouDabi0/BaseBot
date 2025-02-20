@@ -1,7 +1,7 @@
+# BaseBot-WhastApp
+
 <p align="center">
 <img src="https://files.catbox.moe/7t0628.jpg">
-
-# BaseBot-WhastApp
 
 ## Salam
    Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp,   dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.
@@ -52,23 +52,33 @@ git clone https://github.com/MaouDabi0/BaseBot
 ### Tutorial
 
 1. Change Directory
-   Setelah menyalin repo dari github <git clone https://github.com/MaouDabi0/BaseBot>,<br> langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
+   Setelah menyalin repo dari github 
+   <git clone https://github.com/MaouDabi0/BaseBot>,<br> langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
    
 ```bash
 cd BaseBot
 ```
 
-   jika pada tampilan termux anda sudah seperti ini<br> <span style="color: green;">~/BaseBot $</span>, maka langkah selanjutnya adalah<br>
-   
+   jika pada tampilan termux sudah seperti ini<br> ~/BaseBot $, maka langkah selanjutnya adalah<br>
+
 2. Node Package Meneger
    yaitu penginstalan node package, dengan cara menginput promt pada termux dengan mengetik/menyalin ini
 
 ```bash
-npm start
+npm install
 ```
    tunggu hingga process selesai, jika process selesai atau berhasil maka langkah berikutnya adalah<br>
 
 3. Bot Running
-   
+   langkah selanjutnya adalah memasukan promt atau perintah pada termux, dengan mengetik/menyalin ini
+
+```bash
+npm start
+```
+
+4. Connection Save
+   jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke<br>
+   Perangkat tertaut
 
 NOTE:// Gunakan script ini dengan bijak
+![Create: MaouDabi](https://img.shields.io/badge/status-inactive-red.svg)
