@@ -15,6 +15,8 @@
 
 ## Penginstalan Pada Termux
 
+Salin atau ketik promt seperti yang ada di bawah ini di termux
+
  1. Update Package
 
    ```bash
@@ -54,6 +56,7 @@
 ### Tutorial
 
 1. Change Directory
+
    Setelah menyalin repo dari github 
    git clone https://github.com/MaouDabi0/BaseBot,
    langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
@@ -66,6 +69,7 @@
    ~/BaseBot $, maka langkah selanjutnya adalah
 
 2. Node Package Meneger
+
    yaitu penginstalan node package, dengan cara menginput promt pada termux dengan mengetik/menyalin ini
 
    ```bash
@@ -75,6 +79,7 @@
    tunggu hingga process selesai, jika process selesai atau berhasil maka langkah berikutnya adalah
 
 3. Bot Running
+
    langkah selanjutnya adalah memasukan promt atau perintah pada termux, dengan mengetik/menyalin ini
 
    ```bash
@@ -82,6 +87,7 @@
    ```
 
 4. Connection Save
+
    jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.
    Dan selamat Bot berhasil di jalankan. 
 
