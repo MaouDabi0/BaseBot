@@ -17,33 +17,33 @@
 
  1. Update Package
 
-  ```bash
-  pkg upgrade -y && pkg update -y
-  ```
+   ```bash
+   pkg upgrade -y && pkg update -y
+   ```
 
  2. Install NodeJs
 
-  ```bash
-  pkg install nodejs -y
-  ```
+   ```bash
+   pkg install nodejs -y
+   ```
 
  3. Install git
 
-  ```bash
-  pkg install git -y
-  ```
+   ```bash
+   pkg install git -y
+   ```
  
  4. Install ffmpeg
 
-  ```bash
-  pkg install ffmpeg -y
-  ```
+   ```bash
+   pkg install ffmpeg -y
+   ```
  
  5. Repo Clone
 
-  ```bash
-  git clone https://github.com/MaouDabi0/BaseBot
-  ```
+   ```bash
+   git clone https://github.com/MaouDabi0/BaseBot
+   ```
 
 ## Cara Memasangnya
 
@@ -62,7 +62,7 @@
    cd BaseBot
    ```
 
-   jika pada tampilan termux sudah seperti ini<br>
+   jika tampilan termux sudah seperti ini<br>
    ~/BaseBot $, maka langkah selanjutnya adalah
 
 2. Node Package Meneger
