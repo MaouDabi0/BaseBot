@@ -58,8 +58,8 @@ git clone https://github.com/MaouDabi0/BaseBot
 cd BaseBot
 ```
 
-   jika pada tampilan termux anda sudah seperti ini <text~/BaseBot $>, maka langkah selanjutnya adalah<br>
-
+   jika pada tampilan termux anda sudah seperti ini<br> <span style="color: green;">~/BaseBot $</span>, maka langkah selanjutnya adalah<br>
+   
 2. Node Package Meneger
    yaitu penginstalan node package, dengan cara menginput promt pada termux dengan mengetik/menyalin ini
 
