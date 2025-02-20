@@ -85,8 +85,9 @@ npm start
 ## Request & Fix
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
 
+# (C)
 <div align="left">
     <img src="https://img.shields.io/badge/Realese%3A-2025-0?logoSize=12&labelColor=orange&color=gray" alt="Release Badge">
     <br>
-    <img src="https://img.shields.io/badge/Create%3A-Maou_Dabi-0?logoSize=12" alt="Create Badge">
+    <img src="https://img.shields.io/badge/Create%3A-Maou_Dabi-0?logoSize=12&label=Create%3A&labelColor=green&color=grey" alt="Create Badge">
 </div>
