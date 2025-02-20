@@ -83,6 +83,7 @@ npm start
    Dan selamat Bot berhasil di jalankan. 
 
 ## Request & Fix
-   Laporkan Bug ke [sini](maoudabioffc@gmail.com)
+   laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
 
-!(![Static Badge](https://img.shields.io/badge/Create%3A-Maou_Dabi-0?style=flat))
+<p align="left">
+<Static Badge="![Static Badge](https://img.shields.io/badge/Create%3A-Maou_Dabi-0?style=flat)">
