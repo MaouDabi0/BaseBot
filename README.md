@@ -4,8 +4,7 @@
 <img src="https://files.catbox.moe/8hj5gf.jpg">
 
 ## Salam
-   Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp. 
-   Dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.
+   Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp,  dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.
 
    Tentu saja Script ini bisa terhubung dengan akun/nomor WhatsApp anda, Berikut adalah beberapa spesifikasi tentang script BaseBot ini:
 
@@ -16,33 +15,35 @@
 
 ## Penginstalan Pada Termux
 
-1. Update Package
+ 1. Update Package
 
-```bash
-pkg upgrade -y && pkg update -y
-```
+  ```bash
+  pkg upgrade -y && pkg update -y
+  ```
 
-2. Install NodeJs
+ 2. Install NodeJs
 
-```bash
-pkg install nodejs -y
-```
+  ```bash
+  pkg install nodejs -y
+  ```
 
-3. Install git
+ 3. Install git
 
-```bash
-pkg install git -y
-```
-4. Install ffmpeg
+  ```bash
+  pkg install git -y
+  ```
+ 
+ 4. Install ffmpeg
 
-```bash
-pkg install ffmpeg -y
-```
-5. Repo Clone
+  ```bash
+  pkg install ffmpeg -y
+  ```
+ 
+ 5. Repo Clone
 
-```bash
-git clone https://github.com/MaouDabi0/BaseBot
-```
+  ```bash
+  git clone https://github.com/MaouDabi0/BaseBot
+  ```
 
 ## Cara Memasangnya
 
@@ -61,23 +62,24 @@ git clone https://github.com/MaouDabi0/BaseBot
    cd BaseBot
    ```
 
-    jika pada tampilan termux sudah seperti ini 
+   jika pada tampilan termux sudah seperti ini<br>
    ~/BaseBot $, maka langkah selanjutnya adalah
 
 2. Node Package Meneger
    yaitu penginstalan node package, dengan cara menginput promt pada termux dengan mengetik/menyalin ini
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
+   
    tunggu hingga process selesai, jika process selesai atau berhasil maka langkah berikutnya adalah
 
 3. Bot Running
    langkah selanjutnya adalah memasukan promt atau perintah pada termux, dengan mengetik/menyalin ini
 
-```bash
-npm start
-```
+   ```bash
+   npm start
+   ```
 
 4. Connection Save
    jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.
