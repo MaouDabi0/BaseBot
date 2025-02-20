@@ -46,7 +46,7 @@ git clone https://github.com/MaouDabi0/BaseBot
 ## Cara Memasangnya
 
 ### Perhatikan!!
-  Pastikan anda membaca ini dengan baik, untuk Memasangnya ada beberapa hal yang harus anda ketahui. Jika anda belum mengetahui semua dan masih tidak faham, maka klik link yang ada di bawah [ini](https://whatsapp.com/channel/0029Van8WHGEAKW8OUDniG1m/906) dan pelajari baik-baik.
+  Pastikan anda membaca ini dengan baik, untuk Memasangnya ada beberapa hal yang harus anda ketahui. Jika anda belum mengetahui semua dan masih tidak faham, maka klik link yang ada di [Sini](https://whatsapp.com/channel/0029Van8WHGEAKW8OUDniG1m/906) dan pelajari baik-baik.
   
 
 ### Tutorial
@@ -85,5 +85,8 @@ npm start
 ## Request & Fix
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
 
-<p align="left">
-<Static Badge="![Static Badge](https://img.shields.io/badge/Create%3A-Maou_Dabi-0?style=flat)">
+<div align="left">
+    <img src="https://img.shields.io/badge/Realese%3A-2025-0?logoSize=12&labelColor=orange&color=gray" alt="Release Badge">
+    <br>
+    <img src="https://img.shields.io/badge/Create%3A-Maou_Dabi-0?logoSize=12" alt="Create Badge">
+</div>
