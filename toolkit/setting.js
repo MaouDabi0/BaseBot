@@ -1,25 +1,28 @@
 const fs = require('fs');
 const Sys = require('./helper');
 
-const Setting = JSON.parse(fs.readFileSync('./toolkit/set/config.json'));
-const Message = JSON.parse(fs.readFileSync('./toolkit/set/message.json'));
+// Membaca konfigurasi dari file JSON
+const setting = JSON.parse(fs.readFileSync('./toolkit/set/config.json', 'utf-8'));
+const mess = JSON.parse(fs.readFileSync('./toolkit/set/message.json', 'utf-8'));
 
+// Menetapkan nilai global untuk sistem dan konfigurasi
 global.Format = Sys.Format;
 global.Connect = Sys.Connect;
-global.setting = Setting;
-global.mess = Message;
+global.setting = setting;
+global.mess = mess;
 
-global.garis = '────────────────────'; // Atau bisa langsung diambil dari config.json jika ada
-global.side = '│';
-global.type = setting.type || 'default';
-global.thumbnail = setting.thumbnail || '';
-global.botFullName = setting.botFullName || 'Belum Diset';
-global.botName = setting.botName || 'Belum Diset';
-global.isPrefix = ['.', ',', '#', '?', '/'];
-global.ownerName = setting.ownerName || 'default';
+// Menetapkan nilai global dari config.json dengan nilai default
+Object.assign(global, {
+    garis: setting.garis || '────────────────────',
+    side: setting.side || '│',
+    type: setting.type || 'default',
+    thumbnail: setting.thumbnail || '',
+    botFullName: setting.botFullName || 'Belum Diset',
+    botName: setting.botName || 'Belum Diset',
+    isPrefix: ['.', ',', '#', '?', '/'],
+    ownerName: setting.ownerName || 'default',
+    ownerNumber: setting.ownerNumber || ['628xxxxxx'] // Default jika undefined
+});
 
-module.exports = {
-  isPrefix: global.isPrefix,
-  botName: global.botName,
-  garis: global.garis
-};
+// Mengekspor semua variabel global secara otomatis
+module.exports = { ...global };
