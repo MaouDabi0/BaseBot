@@ -57,7 +57,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
 1. Change Directory
 
-   Setelah menyalin repo dari github 
+   Setelah menyalin repo dari github<br>
    `git clone https://github.com/MaouDabi0/BaseBot,`
    langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
    
@@ -98,6 +98,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 # (C)
 <div align="left">
     <img src="https://img.shields.io/badge/Realese%3A-2025-0?logoSize=12&labelColor=orange&color=gray" alt="Release Badge">
+    <br>
     <br>
     <img src="https://img.shields.io/badge/Create%3A-Maou_Dabi-0?logoSize=12&label=Create%3A&labelColor=green&color=grey" alt="Create Badge">
 </div>
