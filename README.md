@@ -58,7 +58,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 1. Change Directory
 
    Setelah menyalin repo dari github<br>
-   `git clone https://github.com/MaouDabi0/BaseBot,`
+   `git clone https://github.com...`,<br>
    langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
    
    ```bash
@@ -66,7 +66,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    ```
 
    jika tampilan termux sudah seperti ini<br>
-   `~/BaseBot $`, maka langkah selanjutnya adalah
+   `~/BaseBot $`,<br> maka langkah selanjutnya adalah
 
 2. Node Package Meneger
 
