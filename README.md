@@ -58,7 +58,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 1. Change Directory
 
    Setelah menyalin repo dari github 
-   git clone https://github.com/MaouDabi0/BaseBot,
+   `git clone https://github.com/MaouDabi0/BaseBot,`
    langkah selanjutnya anda perlu melakukan input promt pada termux dengan mengetik/menyalin ini
    
    ```bash
@@ -66,7 +66,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    ```
 
    jika tampilan termux sudah seperti ini<br>
-   ~/BaseBot $, maka langkah selanjutnya adalah
+   `~/BaseBot $`, maka langkah selanjutnya adalah
 
 2. Node Package Meneger
 
@@ -88,15 +88,17 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
 4. Connection Save
 
-   jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.
+   jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.<br>
    Dan selamat Bot berhasil di jalankan. 
 
 ## Request & Fix
+
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
 
 # (C)
 <div align="left">
     <img src="https://img.shields.io/badge/Realese%3A-2025-0?logoSize=12&labelColor=orange&color=gray" alt="Release Badge">
+    <br>
     <br>
     <img src="https://img.shields.io/badge/Create%3A-Maou_Dabi-0?logoSize=12&label=Create%3A&labelColor=green&color=grey" alt="Create Badge">
 </div>
