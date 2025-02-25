@@ -87,37 +87,48 @@ const startBot = async () => {
         const metadata = await conn.groupMetadata(message.key.remoteJid);
         displayName = `${metadata.subject} | ${sender}`;
       } else if (message.key.remoteJid === 'status@broadcast') {
-        displayName = `${sender} | Status WhatsApp`;
+        displayName = `${sender} | Status`;
       }
 
-      // Mendapatkan teks pesan
+      // Mendapatkan teks pesan atau caption media
       if (message.message.conversation) {
         textMessage = message.message.conversation;
       } else if (message.message.extendedTextMessage?.text) {
         textMessage = message.message.extendedTextMessage.text;
+      } else if (message.message.imageMessage?.caption) {
+        textMessage = message.message.imageMessage.caption;
+      } else if (message.message.videoMessage?.caption) {
+        textMessage = message.message.videoMessage.caption;
       }
 
-      // Deteksi media yang terkirim
+      // Deteksi media yang dikirim
       const mediaTypes = {
-        imageMessage: '[ Gambar terkirim ]',
-        videoMessage: '[ Video terkirim ]',
-        audioMessage: '[ Audio terkirim ]',
-        documentMessage: '[ Dokumen terkirim ]',
-        stickerMessage: '[ Stiker terkirim ]',
-        locationMessage: '[ Lokasi terkirim ]',
-        contactMessage: '[ Kontak terkirim ]',
-        pollCreationMessage: '[ Polling terkirim ]',
-        liveLocationMessage: '[ Lokasi Langsung terkirim ]',
-        reactionMessage: '[ Reaksi terkirim ]'
+        imageMessage: '[ Gambar ]',
+        videoMessage: '[ Video ]',
+        audioMessage: '[ Audio ]',
+        documentMessage: '[ Dokumen ]',
+        stickerMessage: '[ Stiker ]',
+        locationMessage: '[ Lokasi ]',
+        contactMessage: '[ Kontak ]',
+        pollCreationMessage: '[ Polling ]',
+        liveLocationMessage: '[ Lokasi ]',
+        reactionMessage: '[ Reaksi ]'
       };
 
       for (const [key, value] of Object.entries(mediaTypes)) {
         if (message.message[key]) mediaInfo = value;
       }
 
-      // Menampilkan output dengan format
-      console.log(chalk.yellow.bold(`【 ${displayName} 】`) + chalk.cyan.bold(` ${time}`));
-      console.log(chalk.white(` ${textMessage} ${mediaInfo}`.trim()));
+      // Menampilkan output dengan format yang diminta
+      console.log(chalk.yellow.bold(`【 ${displayName} 】:`) + chalk.cyan.bold(` [ ${time} ]`));
+
+      if (mediaInfo && textMessage) {
+        console.log(chalk.white(`  ${mediaInfo} | [ ${textMessage} ]`));
+      } else if (mediaInfo) {
+        console.log(chalk.white(`  ${mediaInfo}`));
+      } else if (textMessage) {
+        console.log(chalk.white(`  [ ${textMessage} ]`));
+      }
 
       // Menjalankan semua plugin
       for (const plugin of Object.values(global.plugins)) {
