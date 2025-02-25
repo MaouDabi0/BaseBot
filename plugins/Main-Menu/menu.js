@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { isPrefix, botName, garis } = require('../../toolkit/setting');
+const setting = require('../../toolkit/setting');
 
 const getPluginList = (dir) => {
   let plugins = [];
@@ -27,7 +27,11 @@ const getMenu = () => {
   if (!botName) return '⚠️ Nama bot belum diatur!';
   if (!Array.isArray(isPrefix) || isPrefix.length === 0) return '⚠️ Prefix tidak ditemukan!';
 
-  let menuText = `┌──「 *${botName} Menu* 」\n│\n`;
+  let menuText = `${head} ${Obrack} *${botName} Menu* ${Cbrack}\n`;
+  menuText += `${side} ${btn} Owner: ${ownerName}\n`;
+  menuText += `${side} ${btn} Type: ${type}\n`;
+  menuText += `${side} ${btn} Contact: .owner\n`;
+  menuText += `${side}${garis}\n`
 
   if (plugins.length === 0) {
     menuText += `│ ⚠️ Tidak ada perintah yang tersedia.\n`;
@@ -37,7 +41,7 @@ const getMenu = () => {
     });
   }
 
-  menuText += `│\n└──「 *Total: ${plugins.length} Commands* 」\n${garis || '════════════════════════════'}`;
+  menuText += `${side}\n${foot} ${Obrack} *Total: ${plugins.length} Cmd* ${Cbrack}\n`;
 
   return menuText;
 };
