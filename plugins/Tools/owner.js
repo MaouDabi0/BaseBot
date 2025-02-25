@@ -3,7 +3,7 @@ const setting = require('../../toolkit/set/config.json');
 
 module.exports = {
     name: 'owner',
-    alias: ['contact', 'admin'],
+    command: ['owner', 'contact', 'admin'], // Multi body command
     category: 'info',
     desc: 'Mengirim kontak owner bot',
 
@@ -12,13 +12,20 @@ module.exports = {
             const { remoteJid } = msg.key;
             const message = msg.message?.conversation || '';
 
-            // Validasi prefix
-            if (!isPrefix.some(prefix => message.startsWith(prefix + 'owner'))) return;
+            // Mendapatkan prefix dan command yang digunakan
+            const prefix = isPrefix.find(p => message.startsWith(p));
+            if (!prefix) return;
 
-            // Mengambil data owner langsung dari config.json
-            const owner = setting.ownerName || 'Owner';
-            const ownerNumber = setting.ownerNumber?.[0];
-            const bot = setting.botName || 'Bot';
+            const args = message.slice(prefix.length).trim().split(/\s+/);
+            const cmd = args.shift().toLowerCase();
+
+            // Validasi apakah command termasuk dalam daftar command plugin ini
+            if (!['owner', 'contact', 'admin'].includes(cmd)) return;
+
+            // Mengambil data owner dari config.json
+            const owner = setting.ownerSetting.ownerName || 'Owner';
+            const ownerNumber = setting.ownerSetting.ownerNumber?.[0];
+            const bot = setting.botSetting.botName || 'Bot';
 
             if (!ownerNumber) {
                 console.error('❌ ownerNumber tidak ditemukan. Pastikan config.json terisi dengan benar.');
