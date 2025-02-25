@@ -1,8 +1,52 @@
 {
-  "ownerNumber": [""],
-  "ownerName": "Kaju",
-  "botName": "DabiChan",
-  "botFullName": "Dabi Chan Ai",
-  "type": "plugin",
-  "thumbnail": "https://files.catbox.moe/7t0628.jpg"
+  "ownerSetting": {
+      "ownerNumber": ["6285725892962"],
+      "ownerName": "Kaju",
+      "contact": "6285725892962",
+      "ownerLink": {
+          "tt": "",
+          "yt": "",
+          "ig": "",
+          "fb": ""
+      }
+  },
+  
+  "botSetting": {
+      "botName": "Dabi Chan",
+      "botFullName": "Dabi Chan Ai",
+      "type": "plugin",
+      "thumbnail": "https://files.catbox.moe/7t0628.jpg",
+      "footer": "© 𝑫𝒂𝒃𝒊𝑳𝒊𝒏𝒆𝒔",
+      "sendTextLink": {
+          "chshort": "",
+          "gcshort": "",
+          "music": ""
+      },
+      "autoTyping": false,
+      "autoReadGc": true,
+      "autoReadPc": false,
+      "public": true
+    },
+    
+    "menuSetting": {
+      "brackets": [
+          "「",
+          "」"
+      ],
+      "frame": {
+        "head": "┌──",
+        "body": "│",
+        "foot": "└──"
+      },
+      "garis": "───────────────",
+      "side": "|",
+      "btn": "•",
+      "isPrefix": [".", ",", "#", "?", "/"]
+    },
+    
+    "storeSetting": {
+      "dana": "",
+      "gopay": "",
+      "ovo": ""
+    }
 }
