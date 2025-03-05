@@ -90,14 +90,14 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    
    tunggu hingga process selesai, jika process selesai atau berhasil maka langkah berikutnya adalah
 
-   >  [!Tip] 
-   >  Jika `npm install` tidak bisa maka gunakan
+  >  [!Tip] 
+  >  Jika `npm install` tidak bisa maka gunakan
 
 3. Yarn Package Meneger
 
    gunakan yarn untuk menginstall **Package** di dalam `~/node_module` pada Script Bot WhatsApp dengan cara mengetik/menyalin ini
 
-   ```bash
+  ```bash
    yarn install
    ```
 
