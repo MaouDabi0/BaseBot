@@ -57,7 +57,9 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 >  [!Tip] 
 >  Gunakan Device yang **kompatibel/sesuai** dengan spesifikasi Script ini
 
-<div align='center'>Spesifikasi Yang Di Sarankan</div> 
+<div style="text-align: center; font-size: 24px; font-weight: bold;">
+    Spesifikasi Yang Di Sarankan
+</div>
   Ini adalah spesifikasi device yang saya sarankan untuk menjalankan Bot WhatsApp di Termux: 
 
 - Ram: 3 - 12 GB
