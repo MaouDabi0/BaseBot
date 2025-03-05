@@ -1,6 +1,6 @@
 {
   "name": "basebot",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp, dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.",
   "main": "index.js",
   "scripts": {
