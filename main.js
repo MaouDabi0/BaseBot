@@ -9,9 +9,34 @@ const path = require('path');
 const pino = require('pino');
 const chalk = require('chalk');
 const readline = require('readline');
-const { makeWASocket, useMultiFileAuthState } = require('@whiskeysockets/baileys');
+const { makeWASocket, useMultiFileAuthState, makeInMemoryStore } = require('@whiskeysockets/baileys');
 const { getMenu } = require('./plugins/Main-Menu/menu');
-const { Format } = require('./toolkit/helper'); 
+const { Format } = require('./toolkit/helper');
+
+const store = makeInMemoryStore({
+  logger: pino().child({ level: 'silent', stream: 'store' })
+});
+
+const logger = pino({ level: 'silent' });
+
+const folderName = 'temp';
+
+// Cek apakah folder temp ada, jika ada maka aktifkan code ini
+fs.rmdir(folderName, (err) => {
+  if (err) {
+    console.log(chalk.red.bold('Gagal menghapus folder', folderName));
+  } else {
+    console.log(chalk.green.bold('Berhasil menghapus folder :', folderName));
+  }
+});
+
+fs.mkdir(folderName, (err) => {
+  if (err) {
+    console.log(chalk.red.bold('Gagal membuat folder', folderName));
+  } else {
+    console.log(chalk.green.bold('Berhasil membuat folder :', folderName));
+  }
+});
 
 global.plugins = {};
 const pluginFolder = path.join(__dirname, './plugins');
@@ -47,13 +72,13 @@ const startBot = async () => {
     const conn = makeWASocket({
       auth: state,
       printQRInTerminal: true,
-      logger: pino({ level: 'silent' }),
-      browser: ['Ubuntu', 'Safari', '20.0.04'],
+      logger: logger,
+      browser: ['Ubuntu', 'Chrome', '20.0.04'],
     });
 
     // Input manual nomor WhatsApp dan kode pairing jika ID bot tidak terdeteksi
     if (!state.creds?.me?.id) {
-      const phoneNumber = await question(chalk.blue('📱 Masukkan nomor bot WhatsApp Anda:\n'));
+      const phoneNumber = await question(chalk.blue('📱 Masukkan nomor bot WhatsApp Anda: '));
       const code = await conn.requestPairingCode(phoneNumber);
       console.log(chalk.green('🔗 Kode Pairing:'), code?.match(/.{1,4}/g)?.join('-') || code);
     }
@@ -76,7 +101,7 @@ const startBot = async () => {
 
       const message = messages[0];
       const sender = message.pushName || 'Pengguna';
-      const time = Format.time(Math.floor(Date.now() / 1000)); 
+      const time = Format.time(Math.floor(Date.now() / 1000));
 
       let displayName = sender;
       let textMessage = '';
@@ -155,3 +180,11 @@ const startBot = async () => {
 console.log(chalk.cyan.bold('Create By Dabi\n'));
 loadPlugins(pluginFolder);
 startBot();
+
+let file = require.resolve(__filename);
+fs.watchFile(file, () => {
+  fs.unwatchFile(file);
+  console.log(chalk.green.bold(`Update ${__filename}`));
+  delete require.cache[file];
+  require(file);
+});
