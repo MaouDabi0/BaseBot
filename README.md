@@ -49,8 +49,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
 ## Cara Memasangnya
 
->  [!Perhatikan]
-
+>  **⚠ Perhatikan**
 >  astikan anda membaca ini dengan baik, untuk Memasangnya ada beberapa hal yang harus anda ketahui. Jika anda belum mengetahui semua dan masih tidak faham, maka klik link yang ada di [Sini](https://whatsapp.com/channel/0029Van8WHGEAKW8OUDniG1m/906) dan pelajari baik-baik.
   
 
