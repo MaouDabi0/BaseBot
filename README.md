@@ -4,9 +4,9 @@
 <img src="https://files.catbox.moe/8hj5gf.jpg">
 
 ## Salam
-   Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp,  dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.
+   Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang Script BaseBot ini, ini adalah sebuah Script BaseBot/Base Bot WhatsApp,  dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan Script ini.
 
-   Tentu saja Script ini bisa terhubung dengan akun/nomor WhatsApp anda, Berikut adalah beberapa spesifikasi tentang script BaseBot ini:
+   Tentu saja Script ini bisa terhubung dengan akun/nomor WhatsApp anda, Berikut adalah beberapa spesifikasi tentang Script BaseBot ini:
 
 - Suport Termux
 - Ringan
@@ -90,7 +90,18 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    
    tunggu hingga process selesai, jika process selesai atau berhasil maka langkah berikutnya adalah
 
-3. Bot Running
+>  [!Tip] 
+>  Jika `npm install` tidak bisa maka gunakan
+
+3. Yarn Package Meneger
+
+   gunakan yarn untuk menginstall **Package** di dalam `~/node_module` pada Script Bot WhatsApp dengan cara mengetik/menyalin ini
+
+   ```bash
+   yarn install
+   ```
+
+4. Bot Running
 
    langkah selanjutnya adalah memasukan promt atau perintah pada termux, dengan mengetik/menyalin ini
 
@@ -98,7 +109,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    npm start
    ```
 
-4. Connection Save
+5. Connection Save
 
    jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.<br>
    Dan selamat Bot berhasil di jalankan. 
