@@ -90,8 +90,8 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    
    tunggu hingga process selesai, jika process selesai atau berhasil maka langkah berikutnya adalah
 
->  [!Tip] 
->  Jika `npm install` tidak bisa maka gunakan
+   >  [!Tip] 
+   >  Jika `npm install` tidak bisa maka gunakan
 
 3. Yarn Package Meneger
 
