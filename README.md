@@ -1,4 +1,4 @@
-# BaseBot-WhastApp
+# <div align='center'>BaseBot-WhastApp</div>
 
 <p align="center">
 <img src="https://files.catbox.moe/8hj5gf.jpg">
