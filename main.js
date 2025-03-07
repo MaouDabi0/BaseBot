@@ -10,7 +10,7 @@ const pino = require('pino');
 const chalk = require('chalk');
 const readline = require('readline');
 const { makeWASocket, useMultiFileAuthState, makeInMemoryStore } = require('@whiskeysockets/baileys');
-const { getMenuText, handleMenuCommand } = require('./plugins/MainMenu/menu');
+const { getMenuText, handleMenuCommand } = require('./plugins/Main_Menu/menu');
 const { isPrefix } = require('./toolkit/setting');
 const { Format } = require('./toolkit/helper');
 
