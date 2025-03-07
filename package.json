@@ -1,0 +1,28 @@
+{
+  "name": "basebot",
+  "version": "1.0.7",
+  "description": "Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang script BaseBot ini, ini adalah sebuah script BaseBot/Base Bot WhatsApp, dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan script ini.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index --pairing"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaouDabi0/BaseBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaouDabi0/BaseBot/issues"
+  },
+  "homepage": "https://github.com/MaouDabi0/BaseBot#readme",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.13",
+    "axios": "^1.8.2",
+    "form-data": "^4.0.2",
+    "moment-timezone": "^0.5.47",
+    "play-dl": "^1.9.7",
+    "yt-search": "^2.12.1"
+  }
+}
