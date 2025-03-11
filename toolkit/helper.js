@@ -2,6 +2,7 @@ const fs = require('fs');
 const moment = require('moment-timezone');
 const { exec } = require('child_process');
 const path = require('path');
+const axios = require('axios');
 
 // Pastikan folder "temp" tersedia
 const tempFolder = path.join(__dirname, '../temp');
@@ -25,6 +26,62 @@ const Format = {
     let minutes = Math.floor((totalSeconds % 3600) / 60);
     let seconds = Math.floor(totalSeconds % 60);
     return `${hours}h ${minutes}m ${seconds}s`;
+  }
+};
+
+// Fungsi untuk mendownload media dari URL
+const download = async (url, filePath) => {
+  try {
+    const writer = fs.createWriteStream(filePath);
+    
+    // Mendapatkan stream data dari URL menggunakan axios
+    const response = await axios({
+      url,
+      method: 'GET',
+      responseType: 'stream',
+    });
+
+    // Menulis data ke file
+    response.data.pipe(writer);
+
+    // Menunggu sampai unduhan selesai
+    return new Promise((resolve, reject) => {
+      writer.on('finish', resolve);
+      writer.on('error', reject);
+    });
+  } catch (error) {
+    console.error('Error saat mendownload file:', error);
+    throw new Error('Gagal mendownload media');
+  }
+};
+
+const pinDownload = async (url, conn, message) => {
+  try {
+    const response = await axios.get(url);
+    const $ = cheerio.load(response.data);
+    const imgSrc = $('img[src^="https://i.pinimg.com"]').attr('src'); // Mendapatkan URL gambar pertama
+
+    if (imgSrc) {
+      const fileName = path.basename(imgSrc);
+      const tempPath = path.join(__dirname, `../../temp/${fileName}`);
+      
+      // Download gambar
+      await download(imgSrc, tempPath);
+      
+      // Kirim media ke chat
+      await conn.sendMessage(message.from, fs.readFileSync(tempPath), { 
+        caption: 'Berikut gambar yang Anda minta!', 
+        mimetype: 'image/jpeg' 
+      });
+      
+      // Hapus file sementara setelah mengirim
+      fs.unlinkSync(tempPath);
+    } else {
+      await conn.sendMessage(message.from, '❌ Gagal menemukan gambar di URL tersebut.', { quoted: message });
+    }
+  } catch (error) {
+    console.error('❌ Error saat mendownload media:', error);
+    await conn.sendMessage(message.from, '❌ Gagal mendownload media, pastikan URL benar.', { quoted: message });
   }
 };
 
@@ -68,7 +125,7 @@ const createSticker = async (media, isVideo = false) => {
   }
 };
 
-module.exports = { Connect, createSticker, Format };
+module.exports = { Connect, createSticker, pinDownload, download, Format };
 
 // Hot reload untuk file ini jika ada perubahan
 let file = require.resolve(__filename);

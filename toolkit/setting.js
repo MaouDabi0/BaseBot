@@ -4,7 +4,7 @@ const path = require('path');
 
 // Membaca konfigurasi dari file JSON
 const setting = JSON.parse(fs.readFileSync('./toolkit/set/config.json', 'utf-8'));
-const mess = JSON.parse(fs.readFileSync('./toolkit/set/message.json', 'utf-8'));
+const toko = JSON.parse(fs.readFileSync('./toolkit/set/toko.json', 'utf-8'));
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json')), 'utf8');
 
 const Obrack = global.brackets?.[0];
@@ -14,7 +14,7 @@ const Cbrack = global.brackets?.[1];
 global.Format = Sys.Format;
 global.Connect = Sys.Connect;
 global.setting = setting;
-global.mess = mess;
+global.toko = toko;
 
 // Menetapkan nilai global dari config.json dengan nilai default
 Object.assign(global, {
@@ -39,8 +39,11 @@ Object.assign(global, {
     readGroup: setting.botSetting.autoread?.group,
     readPrivate: setting.botSetting.autoread?.private,
     autoTyping: setting.botSetting.autoTyping,
-    sewaList: setting.storeSetting.sewa || [],
     autoBio: setting.botSetting.autoBio,
+
+    // Mengarah ke toko
+    sewaList: toko.storeSetting.sewa || [],
+    storeList: Object.keys(toko.storeSetting).filter(k => k !== 'sewa'),
 
     // Mengarah ke package.json
     version: packageJson.version,
