@@ -1,10 +1,10 @@
 const config = require('../../toolkit/set/config.json');
 
 module.exports = {
-  name: 'close',
-  command: ['close', 'tutup'],
+  name: 'open',
+  command: ['open', 'bukagrup'],
   tags: 'Group Menu',
-  desc: 'Menutup chat group WhatsApp',
+  desc: 'Membuka chat Group',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
@@ -37,14 +37,14 @@ module.exports = {
       }
 
       if (!isBotAdmin) {
-        return conn.sendMessage(chatId, { text: '❌ Bot harus menjadi admin untuk menutup grup!' }, { quoted: message });
+        return conn.sendMessage(chatId, { text: '❌ Bot harus menjadi admin untuk membuka grup!' }, { quoted: message });
       }
 
-      await conn.groupSettingUpdate(chatId, 'announcement');
-      conn.sendMessage(chatId, { text: '🔒 Grup telah ditutup! Sekarang hanya admin yang bisa mengirim pesan.' }, { quoted: message });
+      await conn.groupSettingUpdate(chatId, 'not_announcement');
+      conn.sendMessage(chatId, { text: '🔓 Grup telah dibuka! Sekarang semua anggota bisa mengirim pesan.' }, { quoted: message });
     } catch (err) {
       console.error(err);
-      conn.sendMessage(chatId, { text: '❌ Gagal menutup grup. Coba lagi nanti.' }, { quoted: message });
+      conn.sendMessage(chatId, { text: '❌ Gagal membuka grup. Coba lagi nanti.' }, { quoted: message });
     }
   }
 };
