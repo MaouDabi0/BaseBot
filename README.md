@@ -1,7 +1,10 @@
 # <div align='center'>BaseBot-WhastApp</div>
 
 <p align="center">
-<img src="https://files.catbox.moe/8hj5gf.jpg">
+ <img src="https://files.catbox.moe/8hj5gf.jpg">
+</p>
+
+- - -
 
 ## Salam
    Hari yang menyenangkan teman-teman. Kali ini saya akan memberikan sebuah informasi tentang Script BaseBot ini, ini adalah sebuah Script BaseBot/Base Bot WhatsApp,  dalam rangkaian kali ini saya benar-benar berterima kasih kepada kalian yang menggunakan Script ini.
@@ -12,6 +15,12 @@
 - Ringan
 - Type Plugins
 - Menggunakan Code CJS
+
+[![MaouDabi GitHub](https://github-readme-stats.vercel.app/api?username=maoudabi0\&show_icons=true\&theme=default#gh-light-mode-only)](https://github.com/maoudabi0/BaseBot#responsive-card-theme#gh-light-mode-only)
+
+<br>
+
+- - -
 
 ## Penginstalan Pada Termux
 
@@ -113,6 +122,12 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
    jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.<br>
    Dan selamat Bot berhasil di jalankan. 
+
+<a href="https://komarev.com/ghpvc/?username=maoudabi0">
+  <img align="left"
+  src="https://komarev.com/ghpvc/?username=maoudabi0&repo=BaseBot&label=Orang+Melihat&color=c2f542&style=plastic" alt="Profile visitor" />
+</a>
+<br>
 
 ## Request & Fix 
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
