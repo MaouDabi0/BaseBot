@@ -35,6 +35,8 @@ module.exports = {
       global.commandCount = (global.commandCount || 0) + 1;
       const totalCmd = global.commandCount;
 
+      const thumbnail = global.thumbnail;
+
       const uptime = process.uptime();
       const totalMemory = os.totalmem();
       const freeMemory = os.freemem();
@@ -86,11 +88,18 @@ Stats System
         contextInfo: {
           externalAdReply: {
             title: "Bot Stats",
-            body: "Klik untuk bergabung ke grup!",
-            thumbnailUrl: "https://files.catbox.moe/7t0628.jpg",
-            sourceUrl: "https://chat.whatsapp.com/GZTv7EZGOiL4E41Z0A4rgn",
+            body: "Ini adalah statistik bot",
+            thumbnailUrl: thumbnail,
+            sourceUrl: "https://github.com/maoudabi0",
             mediaType: 1,
-            renderLargerThumbnail: true
+            renderLargerThumbnail: true,
+            showAdAttribution: true
+          },
+          forwardingScore: 19,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363310100263711@newsletter',
+            serverMessageId: 152
           }
         }
       };
