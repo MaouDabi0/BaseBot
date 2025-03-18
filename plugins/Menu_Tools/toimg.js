@@ -1,4 +1,4 @@
-const { uploadToCatbox } = require("../../toolkit/uploader");
+const { uploadToCatbox } = require("../../toolkit/scrape/uploader");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const fs = require("fs").promises;
 const path = require("path");
@@ -7,30 +7,36 @@ module.exports = {
   name: "toimg",
   command: ["toimg"],
   tags: ["Tools Menu"],
-  desc: 'Mengonversi sticker menjadi media',
+  desc: "Mengonversi stiker menjadi gambar",
 
-  run: async function (conn, m, { args, isPrefix }) {
+  run: async function (conn, message, { isPrefix }) {
     try {
+      const chatId = message.key.remoteJid;
+      const isGroup = chatId.endsWith("@g.us");
+      const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, "@");
+
       const messageText =
-        m.message?.conversation ||
-        m.message?.extendedTextMessage?.text ||
-        m.message?.imageMessage?.caption ||
-        m.message?.videoMessage?.caption ||
+        message.message?.conversation ||
+        message.message?.extendedTextMessage?.text ||
+        message.message?.imageMessage?.caption ||
+        message.message?.videoMessage?.caption ||
         "";
 
       if (!messageText) return;
 
-      const prefix = isPrefix.find(p => messageText.startsWith(p));
+      const prefix = isPrefix.find((p) => messageText.startsWith(p));
       if (!prefix) return;
 
       const commandText = messageText.slice(prefix.length).trim().split(/\s+/)[0]?.toLowerCase();
       if (!module.exports.command.includes(commandText)) return;
 
-      const quotedMsg = m.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-      const stickerMessage = quotedMsg?.stickerMessage || m.message?.stickerMessage;
+      if (!global.isPremium(senderId)) {
+        return conn.sendMessage(chatId, { text: "❌ Fitur ini hanya untuk pengguna premium!" }, { quoted: message });
+      }
 
+      const stickerMessage = message.quoted?.stickerMessage || message.message?.stickerMessage;
       if (!stickerMessage) {
-        return conn.sendMessage(m.key.remoteJid, { text: "⚠️ Harap balas atau kutip stiker untuk dikonversi ke gambar!" }, { quoted: m });
+        return conn.sendMessage(chatId, { text: "⚠️ Harap balas atau kutip stiker untuk dikonversi ke gambar!" }, { quoted: message });
       }
 
       const stream = await downloadContentFromMessage(stickerMessage, "sticker");
@@ -49,13 +55,14 @@ module.exports = {
       await fs.writeFile(tempFile, buffer);
 
       const imageUrl = await uploadToCatbox(tempFile);
+      await fs.unlink(tempFile).catch(() => {});
 
-      await fs.unlink(tempFile);
+      if (!imageUrl) throw new Error("Gagal mengunggah gambar ke Catbox!");
 
-      return conn.sendMessage(m.key.remoteJid, { image: { url: imageUrl }, caption: "🎉 Stiker berhasil dikonversi ke gambar!" }, { quoted: m });
+      return conn.sendMessage(chatId, { image: { url: imageUrl }, caption: "🎉 Stiker berhasil dikonversi ke gambar!" }, { quoted: message });
 
     } catch (error) {
-      return conn.sendMessage(m.key.remoteJid, { text: `❌ Gagal mengonversi stiker: ${error.message}` }, { quoted: m });
+      return conn.sendMessage(message.key.remoteJid, { text: `❌ Gagal mengonversi stiker: ${error.message}` }, { quoted: message });
     }
   }
 };

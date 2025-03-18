@@ -29,6 +29,9 @@ module.exports = {
       const isImage = quotedMessage?.imageMessage || message.message?.imageMessage;
       const isVideo = quotedMessage?.videoMessage || message.message?.videoMessage;
 
+      const packName = global.botName;
+      const authorName = global.ownerName;
+
       if (!isImage && !isVideo) {
         return conn.sendMessage(
           message.key.remoteJid,
@@ -55,7 +58,10 @@ module.exports = {
 
       let sticker;
       try {
-        sticker = await createSticker(media);
+        sticker = await createSticker(media, {
+          pack: packName,
+          author: authorName
+        });
         if (!sticker) throw new Error('Stiker tidak berhasil dibuat!');
       } catch (error) {
         return conn.sendMessage(
