@@ -1,11 +1,13 @@
 const fs = require("fs");
-const configPath = "./toolkit/set/config.json";
+const path = require("path");
+
+const configPath = path.join(__dirname, "../../toolkit/set/config.json");
 
 module.exports = {
   name: "setname",
-  command: ["setname", "setbotfullname"],
+  command: ["setname", "setfullname"],
   tags: ["Owner Menu"],
-  desc: 'Mengatur nama bot',
+  desc: "Mengatur nama bot",
 
   run: async (conn, message, { isPrefix }) => {
     try {
@@ -26,16 +28,39 @@ module.exports = {
       const commandText = textMessage.slice(prefix.length).trim().split(/\s+/)[0].toLowerCase();
       if (!module.exports.command.includes(commandText)) return;
 
+      if (!global.ownerNumber.includes(senderId.replace(/\D/g, ""))) {
+        return conn.sendMessage(
+          chatId,
+          { text: "❌ Hanya owner yang dapat menggunakan perintah ini!" },
+          { quoted: message }
+        );
+      }
+
       if (!args.length) {
-        return conn.sendMessage(chatId, { text: "❌ Masukkan nama baru untuk bot!" }, { quoted: message });
+        return conn.sendMessage(
+          chatId,
+          { text: "❌ Masukkan nama baru untuk bot!" },
+          { quoted: message }
+        );
       }
 
       let newName = args.join(" ");
+
+      if (!fs.existsSync(configPath)) {
+        return conn.sendMessage(
+          chatId,
+          { text: "⚠️ Config bot tidak ditemukan!" },
+          { quoted: message }
+        );
+      }
+
       let config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
       if (commandText === "setname") {
+        global.botName = newName;
         config.botSetting.botName = newName;
-      } else if (commandText === "setbotfullname") {
+      } else if (commandText === "setfullname") {
+        global.botFullName = newName;
         config.botSetting.botFullName = newName;
       }
 
@@ -52,7 +77,11 @@ module.exports = {
       }, 2000);
     } catch (err) {
       console.error(err);
-      conn.sendMessage(chatId, { text: "⚠️ Terjadi kesalahan saat mengubah nama bot!" }, { quoted: message });
+      conn.sendMessage(
+        message.key.remoteJid,
+        { text: "⚠️ Terjadi kesalahan saat mengubah nama bot!" },
+        { quoted: message }
+      );
     }
   },
   limit: 1,

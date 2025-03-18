@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const config = require('../../toolkit/set/config.json');
 
 module.exports = {
   name: 'deletefile',
@@ -11,7 +10,7 @@ module.exports = {
   run: async (conn, message, { isPrefix }) => {
     const chatId = message?.key?.remoteJid;
     const isGroup = chatId.endsWith('@g.us');
-    const sender = isGroup ? message.key.participant : chatId;
+    const senderId = isGroup ? message.key.participant : chatId;
     const mtype = Object.keys(message.message || {})[0];
     const textMessage =
       (mtype === 'conversation' && message.message?.conversation) ||
@@ -27,7 +26,7 @@ module.exports = {
     const commandText = args.shift()?.toLowerCase();
     if (!module.exports.command.includes(commandText)) return;
 
-    if (!config.ownerSetting.ownerNumber.includes(sender.replace(/\D/g, ''))) {
+    if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
       return conn.sendMessage(chatId, { text: 'Hanya owner yang dapat menggunakan perintah ini' }, { quoted: message });
     }
 

@@ -11,7 +11,7 @@ module.exports = {
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message?.key?.remoteJid;
-    const sender = message.key.participant || chatId;
+    const senderId = message.key.participant || chatId;
     const mtype = Object.keys(message.message || {})[0];
     const textMessage =
       (mtype === 'conversation' && message.message?.conversation) ||
@@ -36,7 +36,7 @@ module.exports = {
       return conn.sendMessage(chatId, { text: 'Gagal membaca config.json' }, { quoted: message });
     }
 
-    if (!config.ownerSetting.ownerNumber.includes(sender.replace(/\D/g, ''))) {
+    if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
       return conn.sendMessage(chatId, { text: 'Hanya owner yang dapat menggunakan perintah ini' }, { quoted: message });
     }
 

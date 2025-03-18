@@ -23,8 +23,8 @@ module.exports = {
 
     if (!module.exports.command.includes(commandText)) return;
 
-    if (!config.ownerSetting.ownerNumber.includes(senderId)) {
-      return conn.sendMessage(chatId, { text: '❌ Fitur ini hanya dapat digunakan oleh Owner bot!' }, { quoted: message });
+    if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
+      return conn.sendMessage(chatId, { text: 'Hanya owner yang dapat menggunakan perintah ini' }, { quoted: message });
     }
 
     const tempDir = path.join(__dirname, '../../temp');

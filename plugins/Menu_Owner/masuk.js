@@ -14,22 +14,25 @@ module.exports = {
     const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
 
     if (!textMessage) return;
-
     const prefix = isPrefix.find(p => textMessage.startsWith(p));
     if (!prefix) return;
 
     const args = textMessage.slice(prefix.length).trim().split(/\s+/);
     const commandText = args.shift().toLowerCase();
-    const text = args.join(' ');
+    let text = args.join(' ');
 
     if (!module.exports.command.includes(commandText)) return;
+    if (!global.isPremium(senderId)) {
+      return conn.sendMessage(chatId, { text: '❌ Fitur ini hanya untuk pengguna premium!' }, { quoted: message });
+    }
 
-    if (!config.ownerSetting.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
-      return conn.sendMessage(chatId, { text: '❌ Fitur ini hanya dapat digunakan oleh Owner bot!' }, { quoted: message });
+    if (!text && message.message.extendedTextMessage?.contextInfo?.quotedMessage) {
+      const quoted = message.message.extendedTextMessage.contextInfo.quotedMessage;
+      text = quoted.conversation || quoted.extendedTextMessage?.text || '';
     }
 
     if (!text) {
-      return conn.sendMessage(chatId, { text: '⚠️ Harap berikan tautan grup WhatsApp.' }, { quoted: message });
+      return conn.sendMessage(chatId, { text: '⚠️ Harap berikan tautan grup WhatsApp atau reply pesan yang berisi tautan.' }, { quoted: message });
     }
 
     const linkRegex = /chat\.whatsapp\.com\/([\w\d]+)/;
@@ -42,17 +45,17 @@ module.exports = {
 
     try {
       const res = await conn.groupAcceptInvite(code);
-      if (isJidGroup(res)) {
+      if (res && isJidGroup(res)) {
         return conn.sendMessage(chatId, { text: `✅ Berhasil bergabung ke grup!\n\n📌 ID Grup: ${res}` }, { quoted: message });
       } else {
-        return conn.sendMessage(chatId, { text: '❌ Gagal bergabung ke grup. Tautan mungkin tidak valid atau bot diblokir.' }, { quoted: message });
+        return conn.sendMessage(chatId, { text: '✅ Berhasil... Menunggu persetujuan admin.' }, { quoted: message });
       }
     } catch (err) {
       console.error(err);
       if (err.message.includes('rejected') || err.message.includes('kicked')) {
         return conn.sendMessage(chatId, { text: '✖️ Gagal memasuki grup, karena bot pernah dikeluarkan.' }, { quoted: message });
       }
-      return conn.sendMessage(chatId, { text: '❌ Tidak dapat bergabung ke grup. Pastikan bot tidak dibatasi untuk masuk ke grup.' }, { quoted: message });
+      return conn.sendMessage(chatId, { text: '❌ Gagal bergabung ke grup. Pastikan bot tidak dibatasi untuk masuk ke grup.' }, { quoted: message });
     }
   }
 };

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const AdmZip = require('adm-zip');
-const config = require('../../toolkit/set/config.json');
 
 module.exports = {
   name: 'Backup',
@@ -25,7 +24,7 @@ module.exports = {
     const commandText = textMessage.slice(prefix.length).trim().split(/\s+/)[0].toLowerCase();
     if (!module.exports.command.includes(commandText)) return;
 
-    if (!config.ownerSetting.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
+    if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
       return conn.sendMessage(
         chatId,
         { text: 'Hanya owner yang dapat menggunakan perintah ini' },
@@ -33,7 +32,7 @@ module.exports = {
       );
     }
 
-    const botName = config.botSetting.botName.replace(/\s+/g, "_");
+    const botName = global.botName.replace(/\s+/g, "_");
     const zipFileName = `${botName}.zip`;
     const zipFilePath = path.join(__dirname, "..", "..", zipFileName);
 
