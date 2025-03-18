@@ -32,7 +32,7 @@ module.exports = {
     }
 
     const tokoPath = './toolkit/set/toko.json';
-    const pluginFolder = './plugins/Menu_Shop';
+    const pluginFolder = './plugins/Menu_Toko';
 
     let tokoData;
     try {
@@ -60,12 +60,13 @@ const fs = require('fs');
 module.exports = {
   name: '${tokoName}',
   command: ['${tokoName}'],
-  tags: 'Shop Menu',
+  tags: 'Toko Menu',
+  desc: 'Menampilkan toko ${tokoName}',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
     const isGroup = chatId.endsWith('@g.us');
-    const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+    const senderId = isGroup ? message.key.participant : chatId.replace(/:\\d+@/, '@');
 
     const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
 
@@ -74,7 +75,7 @@ module.exports = {
     const prefix = isPrefix.find(p => textMessage.startsWith(p));
     if (!prefix) return;
 
-    const args = textMessage.slice(prefix.length).trim().match(/(?:[^\s"]+|"[^"]*")+/g);
+    const args = textMessage.slice(prefix.length).trim().split(/\\s+/);
     const commandText = args.shift().toLowerCase();
 
     if (!module.exports.command.includes(commandText)) return;
@@ -105,7 +106,7 @@ module.exports = {
     fs.writeFileSync(tokoPluginPath, tokoPluginCode);
 
     await conn.sendMessage(chatId, { 
-      text: `✅ Toko *"${tokoName}"* berhasil ditambahkan!\n📁 File toko dibuat di *plugins/Menu_Shop/${tokoName}.js*`
+      text: `✅ Toko *"${tokoName}"* berhasil ditambahkan!\n📁 File toko dibuat di *plugins/Menu_Toko/${tokoName}.js*`
     }, { quoted: message });
 
     await conn.sendMessage(chatId, { text: "🔄 Bot akan restart dalam 3 detik..." }, { quoted: message });
