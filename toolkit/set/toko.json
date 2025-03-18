@@ -1,3 +1,38 @@
 {
-  "storeSetting": {}
+  "storeSetting": {
+    "panel": [
+      {
+        "name": "unli",
+        "price": "12k"
+      },
+      {
+        "name": "7gb",
+        "price": "7k"
+      },
+      {
+        "name": "9gb",
+        "price": "9k"
+      },
+      {
+        "name": "5gb",
+        "price": "5k"
+      },
+      {
+        "name": "3gb",
+        "price": "3k"
+      },
+      {
+        "name": "4gb",
+        "price": "4k"
+      },
+      {
+        "name": "6gb",
+        "price": "6k"
+      },
+      {
+        "name": "8gb",
+        "price": "8k"
+      }
+    ]
+  }
 }

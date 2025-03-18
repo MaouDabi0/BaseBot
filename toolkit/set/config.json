@@ -1,0 +1,71 @@
+{
+  "ownerSetting": {
+    "ownerNumber": [
+      "62857xxx"
+    ],
+    "ownerName": "Kaju",
+    "contact": "62857xxxx",
+    "ownerLink": {
+      "tt": "",
+      "yt": "",
+      "ig": "",
+      "fb": ""
+    },
+    "ownerStore": {
+      "dana": "",
+      "gopay": "",
+      "ovo": ""
+    }
+  },
+  "botSetting": {
+    "botName": "Dabi Chan",
+    "botFullName": "Dabi Chan Ai",
+    "type": "plugin",
+    "thumbnail": "https://files.catbox.moe/7t0628.jpg",
+    "footer": "© 𝑫𝒂𝒃𝒊𝑳𝒊𝒏𝒆𝒔",
+    "sendTextLink": {
+      "chshort": "https://whatsapp.com/channel/0029Van8WHGEAKW8OUDniG1m",
+      "gcshort": "",
+      "music": ""
+    },
+    "autoread": {
+      "group": true,
+      "private": true
+    },
+    "autoTyping": true,
+    "public": true,
+    "autoBio": true
+  },
+  "menuSetting": {
+    "brackets": [
+      "〘",
+      "〙"
+    ],
+    "frame": {
+      "head": "┏━━━",
+      "body": "│",
+      "foot": "┗━"
+    },
+    "garis": "━━━━━━━━━━━━━━━━",
+    "side": "┃",
+    "btn": "●",
+    "isPrefix": [
+      ".",
+      ",",
+      "#",
+      "?",
+      "/"
+    ]
+  },
+  "pluginCategories": {
+    "Owner Menu": "Perintah untuk owner bot",
+    "Info Menu": "Info dari menu",
+    "Download Menu": "Unduh media dari internet",
+    "Tools Menu": "Alat bantu berguna",
+    "Shop Menu": "Menu Shop",
+    "Group Menu": "Menu Group",
+    "Toko Menu": "Menampilkan toko menu",
+    "Ai Menu": "Menampilkan menu ai",
+    "Other Menu": "Fitur lainnya"
+  }
+}
