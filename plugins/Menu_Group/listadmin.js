@@ -7,6 +7,7 @@ module.exports = {
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
     const isGroup = chatId.endsWith('@g.us');
+    const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
 
     const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
     if (!textMessage) return;

@@ -2,7 +2,7 @@ const config = require('../../toolkit/set/config.json');
 
 module.exports = {
   name: 'open',
-  command: ['open', 'bukagrup'],
+  command: ['open', 'buka', 'bukagrup'],
   tags: 'Group Menu',
   desc: 'Membuka chat Group',
 

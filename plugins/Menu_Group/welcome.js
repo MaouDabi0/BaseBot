@@ -1,28 +1,58 @@
 const fs = require('fs');
 const path = require('path');
 
-const welcomeFile = path.join(__dirname, '../../toolkit/db/welcome.json');
+const dbFile = path.join(__dirname, '../../toolkit/db/database.json');
 
-if (!fs.existsSync(welcomeFile)) {
-  fs.writeFileSync(welcomeFile, JSON.stringify({}, null, 2));
+// Pastikan file database ada
+if (!fs.existsSync(dbFile)) {
+  fs.writeFileSync(dbFile, JSON.stringify({ Grup: {} }, null, 2));
 }
 
+// Fungsi membaca database
+const readDB = () => {
+  let data = fs.readFileSync(dbFile, 'utf-8');
+  return data ? JSON.parse(data) : { Grup: {} };
+};
+
+// Fungsi menyimpan database
+const saveDB = (data) => {
+  fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
+};
+
+// Fungsi mendapatkan status welcome
 const getWelcomeStatus = (chatId) => {
-  let data = JSON.parse(fs.readFileSync(welcomeFile));
-  return data[chatId] || false;
+  let db = readDB();
+  let groupData = Object.values(db.Grup || {}).find(group => group.Id === chatId);
+  return groupData?.Welcome?.welcome || false;
 };
 
-const setWelcomeStatus = (chatId, status) => {
-  let data = JSON.parse(fs.readFileSync(welcomeFile));
-  data[chatId] = status;
-  fs.writeFileSync(welcomeFile, JSON.stringify(data, null, 2));
+// Fungsi mendapatkan teks welcome
+const getWelcomeText = (chatId) => {
+  let db = readDB();
+  let groupData = Object.values(db.Grup || {}).find(group => group.Id === chatId);
+  return groupData?.Welcome?.welcomeText || "👋 Selamat datang @user di grup!";
 };
 
+// Fungsi mengatur status welcome dan teksnya
+const setWelcomeSettings = (chatId, groupName, status, text) => {
+  let db = readDB();
+  db.Grup = db.Grup || {};
+  
+  // Buat entri grup jika belum ada
+  db.Grup[groupName] = db.Grup[groupName] || { Id: chatId, Welcome: { welcome: false, welcomeText: "" } };
+  
+  db.Grup[groupName].Welcome.welcome = status;
+  if (text) db.Grup[groupName].Welcome.welcomeText = text;
+
+  saveDB(db);
+};
+
+// Export fungsi utama
 module.exports = {
   name: 'welcome',
   command: ['welcome'],
   tags: ['Group Menu'],
-  desc: 'Menyapa member yang baru gabung',
+  desc: 'Mengatur fitur welcome di grup',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
@@ -37,24 +67,30 @@ module.exports = {
     const commandText = args.shift().toLowerCase();
 
     if (!module.exports.command.includes(commandText)) return;
-
     if (!isGroup) return conn.sendMessage(chatId, { text: "❌ Perintah ini hanya bisa digunakan di dalam grup!" });
 
     const groupMetadata = await conn.groupMetadata(chatId);
+    const groupName = groupMetadata.subject;
     const admins = groupMetadata.participants.filter(participant => participant.admin);
     const isAdmin = admins.some(admin => admin.id.includes(senderId));
 
     if (!isAdmin) return conn.sendMessage(chatId, { text: "❌ Perintah ini hanya bisa digunakan oleh admin grup!" });
 
     if (args[0] === "on") {
-      setWelcomeStatus(chatId, true);
+      setWelcomeSettings(chatId, groupName, true);
       return conn.sendMessage(chatId, { text: "✅ Fitur welcome diaktifkan!" });
     } else if (args[0] === "off") {
-      setWelcomeStatus(chatId, false);
+      setWelcomeSettings(chatId, groupName, false);
       return conn.sendMessage(chatId, { text: "❌ Fitur welcome dinonaktifkan!" });
+    } else if (args[0] === "set") {
+      let welcomeText = args.slice(1).join(' ');
+      if (!welcomeText) return conn.sendMessage(chatId, { text: "⚠️ Gunakan perintah:\n.welcome set <teks selamat datang>" });
+
+      setWelcomeSettings(chatId, groupName, true, welcomeText);
+      return conn.sendMessage(chatId, { text: `✅ Pesan selamat datang diperbarui:\n"${welcomeText}"` });
     } else {
       return conn.sendMessage(chatId, {
-        text: `⚙️ Penggunaan:\n${prefix}welcome on → Aktifkan welcome\n${prefix}welcome off → Nonaktifkan welcome`
+        text: `⚙️ Penggunaan:\n${prefix}welcome on → Aktifkan welcome\n${prefix}welcome off → Nonaktifkan welcome\n${prefix}welcome set <teks> → Atur teks welcome`
       });
     }
   }

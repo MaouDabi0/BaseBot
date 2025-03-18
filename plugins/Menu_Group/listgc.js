@@ -2,7 +2,7 @@ module.exports = {
   name: 'listgroup',
   command: ['listgc', 'listgroup'],
   tags: 'Group Menu',
-  desc: 'Melihat semua group yang bot masuki',
+  desc: 'Melihat semua grup yang bot masuki (Hanya untuk pengguna premium)',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
@@ -18,6 +18,10 @@ module.exports = {
     const commandText = args.shift().toLowerCase();
 
     if (!module.exports.command.includes(commandText)) return;
+
+    if (!global.isPremium(senderId)) {
+      return conn.sendMessage(chatId, { text: '❌ Fitur ini hanya untuk pengguna premium!' }, { quoted: message });
+    }
 
     try {
       const groups = await conn.groupFetchAllParticipating();
