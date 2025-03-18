@@ -123,12 +123,6 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.<br>
    Dan selamat Bot berhasil di jalankan. 
 
-<a href="https://komarev.com/ghpvc/?username=maoudabi0">
-  <img align="left"
-  src="https://komarev.com/ghpvc/?username=maoudabi0&repo=BaseBot&label=Orang+Melihat&color=c2f542&style=plastic" alt="Profile visitor" />
-</a>
-<br>
-
 ## Request & Fix 
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
 
