@@ -1,5 +1,4 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
+const facebook = require("../../toolkit/scrape/facebook");
 
 module.exports = {
   name: "Facebook Downloader",
@@ -9,26 +8,32 @@ module.exports = {
 
   async run(conn, message, { isPrefix }) {
     const chatId = message.key.remoteJid;
-    const isGroup = chatId.endsWith('@g.us');
-    const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
-    const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
+    const isGroup = chatId.endsWith("@g.us");
+    const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, "@");
+    const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || "";
 
     if (!textMessage) return;
 
-    const prefix = isPrefix.find(p => textMessage.startsWith(p));
+    const prefix = isPrefix.find((p) => textMessage.startsWith(p));
     if (!prefix) return;
 
     const args = textMessage.slice(prefix.length).trim().split(/\s+/).slice(1);
     const commandText = textMessage.slice(prefix.length).trim().split(/\s+/)[0].toLowerCase();
     if (!module.exports.command.includes(commandText)) return;
 
-    if (!textMessage) {
+    if (!global.isPremium(senderId)) {
+      return conn.sendMessage(chatId, { text: '❌ Fitur ini hanya untuk pengguna premium!' }, { quoted: message });
+    }
+
+    if (!args[0]) {
       return conn.sendMessage(chatId, {
         text: `🚨 *Format salah!*\nGunakan: *${isPrefix}fb <url>*`,
       });
     }
 
-    if (!textMessage.match(/facebook.com|fb.watch/)) {
+    const url = args[0];
+
+    if (!/facebook\.\w+\/(reel|watch|share)/gi.test(url)) {
       return conn.sendMessage(chatId, {
         text: `❌ *Masukkan URL Facebook yang valid!*`,
       });
@@ -37,19 +42,32 @@ module.exports = {
     try {
       await conn.sendMessage(chatId, { react: { text: "🕒", key: message.key } });
 
-      let videoUrl = await getFbVideo(textMessage);
-      
-      if (!videoUrl) {
+      const videoData = await facebook(url);
+
+      if (!videoData || !videoData.video.length) {
         return conn.sendMessage(chatId, {
           text: "⚠️ *Gagal mengambil video! Pastikan link valid dan publik.*",
         });
       }
 
+      const bestQualityVideo = videoData.video[0]?.url;
+      if (!bestQualityVideo) {
+        return conn.sendMessage(chatId, {
+          text: "⚠️ *Video tidak ditemukan atau tidak dapat diunduh!*",
+        });
+      }
+
+      const caption = `🎬 *Video Facebook Ditemukan!*\n\n📌 *Judul*: ${videoData.title || "Tidak diketahui"}\n⏳ *Durasi*: ${videoData.duration || "Tidak diketahui"}`;
+
       await conn.sendMessage(chatId, {
-        video: { url: videoUrl },
-        caption: "🎬 *Berikut videonya!*",
+        image: { url: videoData.thumbnail },
+        caption,
       });
 
+      await conn.sendMessage(chatId, {
+        video: { url: bestQualityVideo },
+        caption: "✅ *Berikut videonya!*",
+      });
     } catch (err) {
       console.error(err);
       return conn.sendMessage(chatId, {
@@ -58,20 +76,3 @@ module.exports = {
     }
   },
 };
-
-async function getFbVideo(url) {
-  try {
-    let { data } = await axios.get(`https://www.getfvid.com/downloader`, {
-      params: { url },
-      headers: { "User-Agent": "Mozilla/5.0" },
-    });
-
-    let $ = cheerio.load(data);
-    let videoLink = $(".btn-download").attr("href");
-
-    return videoLink || null;
-  } catch (error) {
-    console.error("FB Downloader Error:", error);
-    return null;
-  }
-}
