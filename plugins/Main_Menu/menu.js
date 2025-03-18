@@ -26,12 +26,19 @@ const handleMenuCommand = async (conn, message) => {
     contextInfo: {
       externalAdReply: {
         title: botName,
-        body: "Silakan pilih menu yang tersedia",
+        body: 'Silakan pilih menu yang tersedia',
         thumbnailUrl: thumbnailUrl,
-        sourceUrl: "https://whatsapp.com/channel/0029Van8WHGEAKW8OUDniG1m",
+        sourceUrl: 'https://github.com/maoudabi0',
+        mediaUrl: 'https://wa.me/6285725892962?text=Beli+Kak',
         mediaType: 1,
         renderLargerThumbnail: true,
         showAdAttribution: true
+      },
+      forwardingScore: 0,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363310100263711@newsletter',
+         serverMessageId: 152
       }
     }
   };
@@ -44,7 +51,7 @@ const getMenuText = (sender) => {
   menuText += `Gunakan perintah di bawah untuk berinteraksi dengan saya.\n`;
   menuText += `> ⚠ Note:\n> Bot ini masih dalam tahap pengembangan,\n> jadi gunakan dengan bijak\n\n`;
 
-  menuText += `${head} ${Obrack} *${botName} Info* ${Cbrack}\n`;
+  menuText += `${head} ${Obrack} *Info ${botName}* ${Cbrack}\n`;
   menuText += `${side} ${btn} Bot Name: ${botFullName}\n`;
   menuText += `${side} ${btn} Owner: ${ownerName}\n`;
   menuText += `${side} ${btn} Type: ${type}\n`;
