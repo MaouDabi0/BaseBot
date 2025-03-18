@@ -3,7 +3,6 @@
 * © 2025
 */
 
-// Load dependencies
 require('./toolkit/setting.js');
 const fs = require('fs');
 const path = require('path');
@@ -16,23 +15,19 @@ const { isPrefix } = require('./toolkit/setting');
 const { Format } = require('./toolkit/helper');
 const { updateBio } = require('./plugins/Menu_Owner/autobio');
 
-// Setup logger & store
 const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) });
 const logger = pino({ level: 'silent' });
 
-// Setup folder sementara
 const folderName = 'temp';
 fs.mkdir(folderName, (err) => {
   if (!err) console.log(chalk.green.bold('Berhasil membuat folder :', folderName));
 });
 
-// Global variabel untuk menyimpan plugin
 global.plugins = {};
 global.categories = {};
 
 global.autoBio = true;
 
-// Load plugins secara rekursif
 const pluginFolder = path.join(__dirname, './plugins');
 const loadPlugins = (directory) => {
   if (!fs.existsSync(directory)) return console.log(chalk.yellow(`⚠️ Folder plugin tidak ditemukan: ${directory}`));
@@ -60,17 +55,34 @@ const loadPlugins = (directory) => {
   });
 };
 
-// Setup database
-const dbFile = path.join(__dirname, './toolkit/db/database.json');
-if (!fs.existsSync(dbFile)) fs.writeFileSync(dbFile, JSON.stringify({ Grup: {} }, null, 2));
+const dbFolder = path.join(__dirname, './toolkit/db');
+const dbFile = path.join(dbFolder, 'database.json');
+
+const initializeDatabase = () => {
+  if (!fs.existsSync(dbFolder)) {
+    fs.mkdirSync(dbFolder, { recursive: true });
+    console.log(chalk.green.bold('✅ Folder database dibuat:', dbFolder));
+  }
+
+  if (!fs.existsSync(dbFile)) {
+    const initialData = {
+      Grup: {},
+      Private: {}
+    };
+    fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
+    console.log(chalk.green.bold('✅ File database dibuat:', dbFile));
+  }
+};
+
+initializeDatabase();
 
 const readDB = () => {
   try {
     let data = fs.readFileSync(dbFile, 'utf-8');
-    return data ? JSON.parse(data) : { Grup: {} };
+    return data ? JSON.parse(data) : { Grup: {}, Private: {} };
   } catch (error) {
     console.error('❌ Error membaca database:', error);
-    return { Grup: {} };
+    return { Grup: {}, Private: {} };
   }
 };
 
@@ -86,11 +98,9 @@ const getWelcomeText = (chatId) => {
   return groupData?.Welcome?.welcomeText || "👋 Selamat datang @user di grup!";
 };
 
-// Setup readline
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 const question = (query) => new Promise((resolve) => rl.question(query, resolve));
 
-// Fungsi utama untuk menjalankan bot
 const startBot = async () => {
   try {
     const { state, saveCreds } = await useMultiFileAuthState('./session');
@@ -108,7 +118,6 @@ const startBot = async () => {
       console.log(chalk.green('🔗 Kode Pairing:'), code?.match(/.{1,4}/g)?.join('-') || code);
     }
 
-    // Event handler untuk update koneksi
     conn.ev.on('connection.update', ({ connection }) => {
       const statusMessage = {
         open: () => {
@@ -126,7 +135,6 @@ const startBot = async () => {
       statusMessage[connection]?.();
     });
 
-    // Event handler untuk pesan masuk
     conn.ev.on('messages.upsert', async ({ messages }) => {
       if (!messages?.length) return;
       const message = messages[0];
@@ -199,7 +207,6 @@ const startBot = async () => {
       }
     });
 
-    // Event handler untuk update peserta grup
     conn.ev.on('group-participants.update', async (event) => {
       try {
         let { id: chatId, participants, action } = event;
@@ -222,12 +229,12 @@ const startBot = async () => {
     });
 
     conn.ev.on('creds.update', saveCreds);
+
   } catch (error) {
     console.error(chalk.red('❌ Error saat menjalankan bot:'), error);
   }
 };
 
-// Eksekusi program
 console.log(chalk.cyan.bold('Create By Dabi\n'));
 loadPlugins(pluginFolder);
 startBot();
