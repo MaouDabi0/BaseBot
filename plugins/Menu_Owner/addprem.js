@@ -1,30 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
-
-const readDB = () => {
-  if (!fs.existsSync(dbPath)) return { Private: {}, Grup: {} };
-  return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-};
-
-const writeDB = (data) => {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
-};
-
 module.exports = {
-  name: 'AddPremium',
+  name: 'addprem',
   command: ['addprem'],
-  tags: ['Owner Menu'],
-  desc: 'Menambahkan pengguna ke daftar premium (Hanya Owner).',
+  tags: 'Owner Menu',
+  desc: 'Menambahkan pengguna ke status premium dengan durasi tertentu',
 
   run: async (conn, message, { isPrefix }) => {
     try {
-      const chatId = message?.key?.remoteJid;
-      const senderId = message?.key?.participant || chatId;
-      const textMessage = message.message?.conversation || 
-                          message.message?.extendedTextMessage?.text || 
-                          '';
+      const chatId = message.key.remoteJid;
+      const isGroup = chatId.endsWith('@g.us');
+      const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+      const textMessage =
+        message.message?.conversation || message.message?.extendedTextMessage?.text || '';
 
       if (!textMessage) return;
 
@@ -32,67 +21,79 @@ module.exports = {
       if (!prefix) return;
 
       const args = textMessage.slice(prefix.length).trim().split(/\s+/);
-      const commandText = args.shift()?.toLowerCase();
+      const commandText = args.shift().toLowerCase();
       if (!module.exports.command.includes(commandText)) return;
 
-      if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
-        return conn.sendMessage(chatId, { text: 'Hanya owner yang dapat menggunakan perintah ini.' }, { quoted: message });
+      if (args.length < 2) {
+        return conn.sendMessage(chatId, {
+          text: `📌 Gunakan format yang benar:\n\n*${prefix}addprem @tag 7h*\natau\n*${prefix}addprem nomor 7h*`,
+        });
+      }
+
+      const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
+
+      if (!fs.existsSync(dbPath)) {
+        fs.writeFileSync(dbPath, JSON.stringify({ Private: {} }, null, 2));
+      }
+
+      let db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+
+      if (!db.Private || typeof db.Private !== 'object') {
+        db.Private = {};
       }
 
       let targetNumber;
-      let targetName;
-
       if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid?.length) {
         targetNumber = message.message.extendedTextMessage.contextInfo.mentionedJid[0];
-      } else if (args[0]) {
-        targetNumber = args[0].replace(/\D/g, '') + '@s.whatsapp.net';
       } else {
+        targetNumber = args[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
+      }
+
+      const durationInput = args[1];
+      const match = durationInput.match(/^(\d+)([hmd])$/);
+      if (!match) {
         return conn.sendMessage(chatId, {
-          text: '⚠️ Harap tag, reply, atau ketik nomor pengguna yang ingin dijadikan premium.',
-          quoted: message,
+          text: `❗ Format durasi tidak valid! Gunakan format seperti 7h (jam), 1d (hari), atau 30m (menit).`,
         });
       }
 
-      // Ambil pushName pengguna
-      const contactInfo = await conn.fetchStatus(targetNumber).catch(() => null);
-      targetName = contactInfo?.status || targetNumber.split('@')[0];
+      const value = parseInt(match[1]);
+      const unit = match[2];
 
-      const db = readDB();
-
-      // Cek apakah nomor sudah ada di database
-      let existingUser = Object.keys(db.Private).find(key => db.Private[key].Nomor === targetNumber);
-
-      if (existingUser) {
-        targetName = existingUser;
-      } else {
-        db.Private[targetName] = {
-          Nomor: targetNumber,
-          autoai: false,
-          chat: 0,
-          premium: false
-        };
+      let durationMs;
+      switch (unit) {
+        case 'h':
+          durationMs = value * 60 * 60 * 1000;
+          break;
+        case 'd':
+          durationMs = value * 24 * 60 * 60 * 1000;
+          break;
+        case 'm':
+          durationMs = value * 60 * 1000;
+          break;
       }
 
-      if (db.Private[targetName].premium) {
+      let userKey = Object.keys(db.Private).find((key) => db.Private[key].Nomor === targetNumber);
+
+      if (!userKey) {
         return conn.sendMessage(chatId, {
-          text: `✅ Pengguna *${targetName}* sudah memiliki status premium.`,
-          quoted: message,
+          text: `❌ Pengguna tidak ada di database!`,
         });
       }
 
-      db.Private[targetName].premium = true;
-      writeDB(db);
+      db.Private[userKey].premium = {
+        prem: true,
+        time: durationMs,
+      };
+
+      fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 
       conn.sendMessage(chatId, {
-        text: `🎉 Pengguna *${targetName}* telah ditambahkan ke daftar premium.`,
-        quoted: message,
+        text: `✅ Pengguna *${userKey}* (${targetNumber}) telah menjadi *Premium* selama ${value} ${unit === 'h' ? 'jam' : unit === 'd' ? 'hari' : 'menit'}!`,
       });
-
     } catch (error) {
-      conn.sendMessage(message.key.remoteJid, {
-        text: `❌ Error: ${error.message || error}`,
-        quoted: message,
-      });
+      console.error('Error di plugin addprem.js:', error);
+      conn.sendMessage(chatId, { text: '⚠️ Terjadi kesalahan saat menambahkan status premium!' });
     }
   },
 };

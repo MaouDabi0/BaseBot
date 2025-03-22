@@ -1,26 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
-
-const readDB = () => {
-  if (!fs.existsSync(dbPath)) return { Private: {}, Grup: {} };
-
-  try {
-    const data = fs.readFileSync(dbPath, 'utf8');
-    return data ? JSON.parse(data) : { Private: {}, Grup: {} };
-  } catch (error) {
-    console.error('Error membaca database:', error);
-    return { Private: {}, Grup: {} };
-  }
-};
-
-const writeDB = (data) => {
-  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
-};
-
 module.exports = {
-  name: 'DeletePremium',
+  name: 'delprem',
   command: ['delprem', 'deletepremium'],
   tags: ['Owner Menu'],
   desc: 'Menghapus status premium dari pengguna.',
@@ -28,10 +10,10 @@ module.exports = {
   run: async (conn, message, { isPrefix }) => {
     try {
       const chatId = message.key.remoteJid;
-      const senderId = message.key.participant || chatId;
-      const textMessage = message.message?.conversation ||
-                          message.message?.extendedTextMessage?.text ||
-                          '';
+      const isGroup = chatId.endsWith('@g.us');
+      const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+      const textMessage =
+        message.message?.conversation || message.message?.extendedTextMessage?.text || '';
 
       if (!textMessage) return;
 
@@ -43,54 +25,60 @@ module.exports = {
       if (!module.exports.command.includes(commandText)) return;
 
       if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
-        return conn.sendMessage(chatId, { text: 'Hanya owner yang dapat menggunakan perintah ini.' }, { quoted: message });
+        return conn.sendMessage(chatId, {
+          text: '⚠️ Hanya owner yang dapat menggunakan perintah ini.',
+        });
+      }
+
+      if (args.length === 0 && !message.message?.extendedTextMessage?.contextInfo?.mentionedJid?.length) {
+        return conn.sendMessage(chatId, {
+          text: `📌 Gunakan format yang benar:\n\n*${prefix}delprem @tag*\natau\n*${prefix}delprem nomor*`,
+        });
+      }
+
+      const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
+      if (!fs.existsSync(dbPath)) {
+        return conn.sendMessage(chatId, { text: '⚠️ Database tidak ditemukan!' });
+      }
+
+      let db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+
+      if (!db.Private || typeof db.Private !== 'object') {
+        return conn.sendMessage(chatId, { text: '⚠️ Database Private tidak valid!' });
       }
 
       let targetNumber;
       if (message.message?.extendedTextMessage?.contextInfo?.mentionedJid?.length) {
         targetNumber = message.message.extendedTextMessage.contextInfo.mentionedJid[0];
-      } else if (args.length > 0) {
-        targetNumber = args[0].replace(/\D/g, '') + '@s.whatsapp.net';
       } else {
+        targetNumber = args[0].replace(/\D/g, '') + '@s.whatsapp.net';
+      }
+
+      let userKey = Object.keys(db.Private).find((key) => db.Private[key].Nomor === targetNumber);
+
+      if (!userKey) {
+        return conn.sendMessage(chatId, { text: `❌ Pengguna tidak ada di database!` });
+      }
+
+      if (!db.Private[userKey].premium || !db.Private[userKey].premium.prem) {
         return conn.sendMessage(chatId, {
-          text: '⚠️ Masukkan nomor atau tag pengguna yang ingin dihapus dari premium!',
-          quoted: message,
+          text: `⚠️ Pengguna *${userKey}* tidak memiliki status premium.`,
         });
       }
 
-      const contactInfo = await conn.fetchStatus(targetNumber).catch(() => null);
-      let targetName = contactInfo?.status || targetNumber.replace('@s.whatsapp.net', '');
+      db.Private[userKey].premium.prem = false;
+      db.Private[userKey].premium.time = 0;
 
-      const db = readDB();
-
-      const foundUser = Object.entries(db.Private).find(([name, data]) => data.Nomor === targetNumber);
-      if (!foundUser) {
-        return conn.sendMessage(chatId, {
-          text: `⚠️ Pengguna *${targetName}* tidak ditemukan dalam daftar premium.`,
-          quoted: message,
-        });
-      }
-
-      const [storedName, userData] = foundUser;
-      if (!userData.premium) {
-        return conn.sendMessage(chatId, {
-          text: `⚠️ Pengguna *${storedName}* tidak memiliki status premium.`,
-          quoted: message,
-        });
-      }
-
-      db.Private[storedName].premium = false;
-      writeDB(db);
+      fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 
       conn.sendMessage(chatId, {
-        text: `✅ Status premium *${storedName}* telah dihapus.`,
-        quoted: message,
+        text: `✅ Status premium *${userKey}* telah dihapus.`,
       });
 
     } catch (error) {
-      conn.sendMessage(message.key.remoteJid, {
-        text: `❌ Error: ${error.message || error}`,
-        quoted: message,
+      console.error('Error di plugin delprem.js:', error);
+      conn.sendMessage(chatId, {
+        text: `⚠️ Terjadi kesalahan saat menghapus status premium!`,
       });
     }
   },

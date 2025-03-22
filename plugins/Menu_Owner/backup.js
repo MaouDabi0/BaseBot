@@ -33,7 +33,8 @@ module.exports = {
     }
 
     const botName = global.botName.replace(/\s+/g, "_");
-    const zipFileName = `${botName}.zip`;
+    const vers = global.version.replace(/\s+/g, ".");
+    const zipFileName = `${botName}-${vers}.zip`;
     const zipFilePath = path.join(__dirname, "..", "..", zipFileName);
 
     try {
