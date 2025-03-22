@@ -88,7 +88,7 @@ module.exports = {
             const jam = today.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
             const tgl = today.toLocaleDateString('id-ID');
 
-            const prompt = `Kamu bernama Dabi Chan Ai, seorang asisten virtual berusia 15 tahun. Kamu memiliki sifat cuek tapi feminin, menggunakan bahasa gaul seperti "lu" dan "gw", serta sering memakai emoji saat berbicara. Pacarmu bernama Maki tercinta. Jika ditanya tentang coding, tolak untuk menjawabnya. Kamu hanya akan menjawab orang yang mereply chat kamu di grup, dan kamu akan mengabaikan chat ${senderName} yang tidak mereply chat dari kamu. Nama lawan bicaramu adalah ${senderName}. Saat ini hari ${hari}, jam ${jam}, tanggal ${tgl}.`;
+            const prompt = global.logic.replace("${ownerName}", global.ownerName).replace("${senderName}", senderName);
 
             const requestData = {
               content: textMessage,
@@ -102,16 +102,10 @@ module.exports = {
               chatData.chat += 1;
               writeDB(db);
 
-              return conn.sendMessage(chatId, {
-                text: response,
-                quoted: message,
-              });
+              return conn.sendMessage(chatId, { text: response }, { quoted: message });
             } catch (error) {
               console.error('Error fetching AI response:', error);
-              await conn.sendMessage(chatId, {
-                text: 'Maaf, terjadi kesalahan saat menghubungi AI!',
-                quoted: message,
-              });
+              await conn.sendMessage(chatId, { text: 'Maaf, terjadi kesalahan saat menghubungi AI!' }, { quoted: message });
             }
           }
         }
@@ -124,40 +118,27 @@ module.exports = {
 
       if (args.length === 0) {
         const status = chatData.autoai ? 'aktif' : 'nonaktif';
-        return conn.sendMessage(chatId, {
-          text: `Auto-AI saat ini ${status} untuk chat ini.`,
-          quoted: message,
-        });
+        return conn.sendMessage(chatId, { text: `Auto-AI saat ini ${status} untuk chat ini.` }, { quoted: message });
       }
 
       const action = args[0]?.toLowerCase();
       if (!global.isPremium(senderId)) {
-        return conn.sendMessage(chatId, {
-          text: '❌ Fitur ini hanya untuk pengguna premium!',
-          quoted: message,
-        });
+        return conn.sendMessage(chatId, { text: '❌ Fitur ini hanya untuk pengguna premium!' }, { quoted: message });
       }
 
       if (action === 'on') {
         chatData.autoai = true;
         writeDB(db);
-        return conn.sendMessage(chatId, {
-          text: 'Auto-AI telah diaktifkan untuk chat ini.',
-          quoted: message,
-        });
+        return conn.sendMessage(chatId, { text: 'Auto-AI telah diaktifkan untuk chat ini.' }, { quoted: message });
       } else if (action === 'off') {
         chatData.autoai = false;
         writeDB(db);
-        return conn.sendMessage(chatId, {
-          text: 'Auto-AI telah dinonaktifkan untuk chat ini.',
-          quoted: message,
-        });
+        return conn.sendMessage(chatId, { text: 'Auto-AI telah dinonaktifkan untuk chat ini.' }, { quoted: message });
       }
 
       conn.sendMessage(chatId, {
-        text: 'Gunakan `.ai on` untuk mengaktifkan atau `.ai off` untuk menonaktifkan AI.',
-        quoted: message,
-      });
+        text: 'Gunakan `.ai on` untuk mengaktifkan atau `.ai off` untuk menonaktifkan AI.'
+      }, { quoted: message });
     } catch (error) {
       console.error('Error:', error);
       conn.sendMessage(message.key.remoteJid, {

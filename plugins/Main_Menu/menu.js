@@ -1,52 +1,58 @@
-const fs = require('fs');
-const path = require('path');
-const setting = require('../../toolkit/setting');
-const config = require('../../toolkit/set/config.json');
 const { generateWAMessageFromContent } = require('@whiskeysockets/baileys');
+const config = require('../../toolkit/set/config.json');
 
-const {
-  isPrefix, botName, botFullName, ownerName, type, footer, head,
-  Obrack, Cbrack, side, btn, garis, foot, version, baileys
-} = setting;
-
-const thumbnailUrl = setting.thumbnail;
 const more = String.fromCharCode(8206);
 const readmore = more.repeat(4001);
 
-const handleMenuCommand = async (conn, message) => {
-  const remoteJid = message?.key?.remoteJid;
-  if (!remoteJid) return console.error('❌ JID tidak valid atau tidak ditemukan!');
-  
-  const senderNumber = message.pushName || 'Pengguna';
-  const sender = `${senderNumber}`;
+module.exports = {
+  name: 'menu',
+  command: ['menu', 'help'],
+  tags: 'Info Menu',
+  run: async (conn, message, { isPrefix }) => {
+    const chatId = message.key.remoteJid;
+    const isGroup = chatId.endsWith('@g.us');
+    const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+    const textMessage =
+      message.message?.conversation || message.message?.extendedTextMessage?.text || '';
 
-  const menuText = getMenuText(sender);
+    if (!textMessage) return;
 
-  const adReply = {
-    contextInfo: {
-      externalAdReply: {
-        title: botName,
-        body: 'Silakan pilih menu yang tersedia',
-        thumbnailUrl: thumbnailUrl,
-        sourceUrl: 'https://github.com/maoudabi0',
-        mediaUrl: 'https://wa.me/6285725892962?text=Beli+Kak',
-        mediaType: 1,
-        renderLargerThumbnail: true,
-        showAdAttribution: true
-      },
-      forwardingScore: 0,
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363310100263711@newsletter',
-         serverMessageId: 152
+    const prefix = isPrefix.find((p) => textMessage.startsWith(p));
+    if (!prefix) return;
+
+    const args = textMessage.slice(prefix.length).trim().split(/\s+/);
+    const commandText = args.shift().toLowerCase();
+    if (!module.exports.command.includes(commandText)) return;
+
+    const senderNumber = message.pushName || 'Pengguna';
+    const sender = `${senderNumber}`;
+    const menuText = getMenuText(sender);
+
+    const adReply = {
+      contextInfo: {
+        externalAdReply: {
+          title: botName,
+          body: 'Silakan pilih menu yang tersedia',
+          thumbnailUrl: thumbnail,
+          sourceUrl: 'https://github.com/maoudabi0',
+          mediaUrl: 'https://wa.me/6285725892962?text=Beli+Kak',
+          mediaType: 1,
+          renderLargerThumbnail: true,
+          showAdAttribution: true
+        },
+        forwardingScore: 0,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363310100263711@newsletter'
+        }
       }
-    }
-  };
+    };
 
-  await conn.sendMessage(remoteJid, { text: menuText, ...adReply }, { quoted: message });
+    await conn.sendMessage(chatId, { text: menuText, ...adReply }, { quoted: message });
+  }
 };
 
-const getMenuText = (sender) => {
+function getMenuText(sender) {
   let menuText = `Halo *${sender}*, Saya adalah asisten virtual yang siap membantu.\n`;
   menuText += `Gunakan perintah di bawah untuk berinteraksi dengan saya.\n`;
   menuText += `> ⚠ Note:\n> Bot ini masih dalam tahap pengembangan,\n> jadi gunakan dengan bijak\n\n`;
@@ -86,10 +92,4 @@ const getMenuText = (sender) => {
 
   menuText += `${Obrack} ${footer} ${Cbrack}`;
   return menuText;
-};
-
-module.exports = {
-  getMenuText,
-  handleMenuCommand,
-  isPrefix
-};
+}
