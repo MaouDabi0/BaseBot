@@ -1,22 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
-
-const readDB = () => {
-  if (!fs.existsSync(dbPath)) return { Private: {}, Grup: {} };
-
-  try {
-    const data = fs.readFileSync(dbPath, 'utf8');
-    return data ? JSON.parse(data) : { Private: {}, Grup: {} };
-  } catch (error) {
-    console.error('Error membaca database:', error);
-    return { Private: {}, Grup: {} };
-  }
-};
-
 module.exports = {
-  name: 'ListPremium',
+  name: 'listprem',
   command: ['listprem', 'listpremium'],
   tags: ['Owner Menu'],
   desc: 'Menampilkan daftar pengguna premium.',
@@ -39,28 +25,51 @@ module.exports = {
       if (!module.exports.command.includes(commandText)) return;
 
       if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
-        return conn.sendMessage(chatId, { text: '❌ Hanya owner yang dapat menggunakan perintah ini.', quoted: message });
+        return conn.sendMessage(chatId, {
+          text: '❌ Hanya owner yang dapat menggunakan perintah ini.',
+        });
       }
 
-      const db = readDB();
+      const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
+      if (!fs.existsSync(dbPath)) {
+        return conn.sendMessage(chatId, { text: '⚠️ Database tidak ditemukan!' });
+      }
+
+      let db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+
+      if (!db.Private || typeof db.Private !== 'object') {
+        return conn.sendMessage(chatId, { text: '⚠️ Database Private tidak valid!' });
+      }
 
       const premiumUsers = Object.entries(db.Private)
-        .filter(([_, data]) => data.premium === true)
-        .map(([name, data]) => ({ name, number: data.Nomor }));
+        .filter(([_, data]) => data.premium?.prem === true)
+        .map(([name, data]) => ({
+          name,
+          number: data.Nomor,
+          time: data.premium.time,
+        }));
 
       if (premiumUsers.length === 0) {
-        return conn.sendMessage(chatId, { text: '📌 Saat ini tidak ada pengguna premium.', quoted: message });
+        return conn.sendMessage(chatId, { text: '📌 Saat ini tidak ada pengguna premium.' });
       }
 
       let text = `📌 *Daftar Pengguna Premium*\n\n`;
       premiumUsers.forEach((user, index) => {
+        const remainingTime = user.time > 0
+          ? `${Math.floor(user.time / 3600000)} jam ${Math.floor((user.time % 3600000) / 60000)} menit`
+          : 'Expired';
         text += `*${index + 1}.* ${user.name} - wa.me/${user.number.replace('@s.whatsapp.net', '')}\n`;
+        text += `    ⏳ *Sisa Waktu:* ${remainingTime}\n\n`;
       });
-      text += `\nTotal: ${premiumUsers.length} pengguna premium.`;
 
-      conn.sendMessage(chatId, { text, quoted: message });
+      text += `Total: ${premiumUsers.length} pengguna premium.`;
+
+      conn.sendMessage(chatId, { text });
     } catch (error) {
-      conn.sendMessage(chatId, { text: `❌ Error: ${error.message || error}`, quoted: message });
+      console.error('Error di plugin listprem.js:', error);
+      conn.sendMessage(chatId, {
+        text: `❌ Terjadi kesalahan saat menampilkan daftar pengguna premium.`,
+      });
     }
   },
 };
