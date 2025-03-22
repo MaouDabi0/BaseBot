@@ -124,7 +124,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
    Dan selamat Bot berhasil di jalankan. 
 
 ## Request & Fix 
-   laporkan Bug ke [sini](https://wa.me/6285864147708?text=halo+kak+aku+ingin+melaporkan+bug)
+   laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
 
 # (C)
 <div align="left">
