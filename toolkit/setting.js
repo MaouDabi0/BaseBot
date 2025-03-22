@@ -54,13 +54,16 @@ Object.assign(global, {
     autoTyping: setting.botSetting.autoTyping,
     autoBio: setting.botSetting.autoBio,
     public: setting.botSetting.public,
+    logic: setting.botSetting.logic,
     sewaList: toko.storeSetting.sewa || [],
     storeList: Object.keys(toko.storeSetting).filter(k => k !== 'sewa'),
+
     ownerStore: {
         dana: setting.ownerSetting.ownerStore?.dana || 'Tidak tersedia',
         gopay: setting.ownerSetting.ownerStore?.gopay || 'Tidak tersedia',
         ovo: setting.ownerSetting.ownerStore?.ovo || 'Tidak tersedia'
     },
+
     version: packageJson.version,
     baileys: Object.keys(packageJson.dependencies).find(dep => dep.includes('baileys'))
 });
