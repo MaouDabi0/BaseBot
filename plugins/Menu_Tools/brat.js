@@ -6,7 +6,7 @@ const { exec } = require("child_process");
 module.exports = {
   name: 'bratsticker',
   command: ['brat', 'bratvid'],
-  tags: ["Tools Menu"],
+  tags: 'Tools Menu',
   desc: 'Membuat stiker bart',
 
   run: async (conn, message, { isPrefix }) => {
@@ -47,8 +47,8 @@ module.exports = {
         return conn.sendMessage(chatId, { text: `Gagal mengambil ${isVideo ? "Brat Video" : "Brat Sticker"}. Coba lagi nanti.` }, { quoted: message });
       }
 
-      let inputPath = path.join(__dirname, `brat.${isVideo ? "mp4" : "png"}`);
-      let outputPath = path.join(__dirname, "brat.webp");
+      let inputPath = path.join(__dirname, `../../temp/brat.${isVideo ? "mp4" : "png"}`);
+      let outputPath = path.join(__dirname, "../../temp/brat.webp");
       fs.writeFileSync(inputPath, response.data);
 
       if (isVideo) {

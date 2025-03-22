@@ -58,10 +58,7 @@ module.exports = {
 
       let sticker;
       try {
-        sticker = await createSticker(media, {
-          pack: packName,
-          author: authorName
-        });
+        sticker = await createSticker(media, isVideo);
         if (!sticker) throw new Error('Stiker tidak berhasil dibuat!');
       } catch (error) {
         return conn.sendMessage(
