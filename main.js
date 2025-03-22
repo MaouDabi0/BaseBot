@@ -1,7 +1,7 @@
 /*
-* Create By Dabi
-* © 2025
-*/
+ * Create By Dabi
+ * © 2025
+ */
 
 require('./toolkit/setting.js');
 const fs = require('fs');
@@ -79,10 +79,10 @@ initializeDatabase();
 const readDB = () => {
   try {
     let data = fs.readFileSync(dbFile, 'utf-8');
-    return data ? JSON.parse(data) : { Grup: {}, Private: {} };
+    return data ? JSON.parse(data) : { Private: {}, Grup: {} };
   } catch (error) {
     console.error('❌ Error membaca database:', error);
-    return { Grup: {}, Private: {} };
+    return { Private: {}, Grup: {} };
   }
 };
 
@@ -96,6 +96,40 @@ const getWelcomeText = (chatId) => {
   let db = readDB();
   let groupData = Object.values(db.Grup || {}).find(group => group.Id === chatId);
   return groupData?.Welcome?.welcomeText || "👋 Selamat datang @user di grup!";
+};
+
+setInterval(() => {
+  const dbPath = path.join(__dirname, './toolkit/db/database.json');
+  if (!fs.existsSync(dbPath)) return;
+
+  let db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+
+  Object.keys(db.Private).forEach((key) => {
+    const user = db.Private[key];
+    if (user.premium?.prem && user.premium.time > 0) {
+      user.premium.time -= 60000;
+      if (user.premium.time <= 0) {
+        user.premium.prem = false;
+      }
+    }
+  });
+
+  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
+}, 60000);
+
+const isMuted = async (chatId, senderId, conn) => {
+  const db = readDB();
+  const groupData = Object.values(db.Grup).find((g) => g.Id === chatId);
+
+  if (groupData?.mute) {
+    const groupMetadata = await conn.groupMetadata(chatId);
+    const groupAdmins = groupMetadata.participants.filter((p) => p.admin);
+    const isAdmin = groupAdmins.some((admin) => admin.id === senderId);
+
+    if (!isAdmin) return true;
+  }
+
+  return false;
 };
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -140,17 +174,17 @@ const startBot = async () => {
       const message = messages[0];
       if (!message?.message) return;
 
-      const sender = message.pushName || 'Pengguna';
+      const senderId = message.key.participant || message.key.remoteJid;
       const time = Format.time(Math.floor(Date.now() / 1000));
       const chatId = message.key.remoteJid;
       const isGroup = chatId.endsWith('@g.us');
 
-      let displayName = sender;
+      let displayName = message.pushName || 'Pengguna';
       if (isGroup) {
         const metadata = await conn.groupMetadata(chatId);
-        displayName = `${metadata.subject} | ${sender}`;
+        displayName = `${metadata.subject} | ${displayName}`;
       } else if (chatId === 'status@broadcast') {
-        displayName = `${sender} | Status`;
+        displayName = `${displayName} | Status`;
       }
 
       let textMessage = '';
@@ -160,15 +194,6 @@ const startBot = async () => {
       else if (message.message.extendedTextMessage?.text) textMessage = message.message.extendedTextMessage.text;
       else if (message.message.imageMessage?.caption) textMessage = message.message.imageMessage.caption;
       else if (message.message.videoMessage?.caption) textMessage = message.message.videoMessage.caption;
-
-      if ((isGroup && global.readGroup) || (!isGroup && global.readPrivate)) {
-        await conn.readMessages([message.key]);
-      }
-
-      if ((isGroup && global.autoTyping) || (!isGroup && global.autoTyping)) {
-        await conn.sendPresenceUpdate("composing", chatId);
-        setTimeout(async () => await conn.sendPresenceUpdate("paused", chatId), 3000);
-      }
 
       const mediaTypes = {
         imageMessage: '[ Gambar ]',
@@ -192,6 +217,17 @@ const startBot = async () => {
       else if (mediaInfo) console.log(chalk.white(`  ${mediaInfo}`));
       else if (textMessage) console.log(chalk.white(`  [ ${textMessage} ]`));
 
+      if (await isMuted(chatId, senderId, conn)) return;
+
+      if ((isGroup && global.readGroup) || (!isGroup && global.readPrivate)) {
+        await conn.readMessages([message.key]);
+      }
+
+      if ((isGroup && global.autoTyping) || (!isGroup && global.autoTyping)) {
+        await conn.sendPresenceUpdate("composing", chatId);
+        setTimeout(async () => await conn.sendPresenceUpdate("paused", chatId), 3000);
+      }
+
       for (const plugin of Object.values(global.plugins)) {
         try {
           const args = textMessage.trim().split(/\s+/).slice(1);
@@ -199,11 +235,6 @@ const startBot = async () => {
         } catch (err) {
           console.log(chalk.red(`❌ Error pada plugin: ${err.message}`));
         }
-      }
-
-      if (textMessage.startsWith(isPrefix[0])) {
-        const command = textMessage.slice(isPrefix[0].length).trim();
-        if (command === 'menu') await handleMenuCommand(conn, message);
       }
     });
 
