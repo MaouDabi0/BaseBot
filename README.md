@@ -132,9 +132,9 @@ Berikut adalah panduan lengkap untuk membuat plugin dengan sistem plugin saya pa
 </p>
 
 ### Struktur Plugins
-<h4 align="center">
+<p align="center">
 Setiap plugin memiliki struktur dasar sebagai berikut:
-</h4>
+</p>
 
 ```js
 const fs = require('fs');
@@ -176,9 +176,84 @@ module.exports = {
 };
 ```
 
-### Penjelasan Property Plugins
+### Parameter Fungsi run
+- ```conn```  -->  Objek utama dari Baileys untuk mengirim pesan.
+- ```message```  -->  Data pesan yang diterima oleh bot.
+- ```args```  -->  Array yang berisi argumen setelah command.
+- ```isPrefix```  -->  Array yang berisi semua prefix yang didukung.
 
+### Contoh Penggunaan
+<p align="center">
+Berikut adalah contoh implementasi untuk plugin menu.js yang memiliki fungsi sebagai tampilan menu:
+</p>
 
+1. Import module
+```js
+const { generateWAMessageFromContent } = require('@whiskeysockets/baileys');
+const config = require('../../toolkit/set/config.json');
+```
+- Menggunakan @whiskeysockets/baileys untuk pengiriman pesan.
+- Menggunakan config.json sebagai sumber data seperti nama bot, owner, dll.
+
+2. Properti Plugin
+```js
+module.exports = {
+  name: 'menu',
+  command: ['menu'],
+  tags: 'Info Menu',
+  run: async (conn, message, { isPrefix }) => { ... }
+};
+```
+
+#### Penjelasan Property Plugins
+- ```name```  -->  Nama unik plugin yang digunakan untuk identifikasi.
+- ```command```  -->  Array berisi daftar command yang dapat digunakan untuk memanggil plugin.
+- ```tags```  -->  Kategori untuk pengelompokan plugin pada menu bot.
+- ```desc``` -->  Deskripsi singkat mengenai fungsi plugin.
+- ```run```  -->  Fungsi utama yang dijalankan saat plugin dipanggil.
+
+3. Ekstraksi Data Pesan
+```js
+const chatId = message.key.remoteJid;
+const isGroup = chatId.endsWith('@g.us');
+const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
+```
+
+- ```chatId```  -->  ID chat, dapat berupa personal atau grup.
+- ```isGroup```  -->  Mengecek apakah pesan berasal dari grup.
+- ```senderId```  -->  ID pengirim pesan.
+- ```textMessage```  -->  Teks yang dikirim oleh pengguna.
+
+4. Validasi prefix dan command
+```js
+const prefix = isPrefix.find((p) => textMessage.startsWith(p));
+if (!prefix) return;
+```
+
+```js
+const commandText = textMessage.slice(prefix.length).trim().split(/\s+/)[0].toLowerCase();
+if (!module.exports.command.includes(commandText)) return;
+
+```
+- ```isPrefix```  -->  Mengecek apakah pesan diawali dengan salah satu prefix yang diatur (isPrefix).
+- Jika tidak ada prefix yang cocok, maka plugin tidak akan dieksekusi.
+
+- ```commandText```  -->  Mengambil perintah setelah prefix.
+- ```includes(commandText)```  -->  Mengecek apakah perintah sesuai dengan plugin.
+
+5. Tips pengembangan
+- gunakan ```conn.sendMessage``` untuk mengirim pesan.
+- Gunakan ```quoted: message``` jika ingin membalas langsung ke pesan pengguna.
+- Pastikan semua error ditangani dengan baik menggunakan ```try-catch```
+
+### Cara Menambahkan Plugin Baru
+1. Buat file baru di folder yang sesuai (misalnya `plugins/Menu_Info/menu.js`).
+2. Pastikan struktur seperti contoh di atas.
+3. Sesuaikan `name`, `command`, `tags`, dan `run`.
+4. Jika ingin menambahkan fungsi tambahan, buat fungsi baru di dalam file yang sama.
+
+- - -
 
 ## Request & Fix 
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
