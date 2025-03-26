@@ -106,7 +106,7 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
    gunakan yarn untuk menginstall **Package** di dalam `~/node_module` pada Script Bot WhatsApp dengan cara mengetik/menyalin ini
 
-  ```bash
+   ```bash
    yarn install
    ```
 
@@ -122,6 +122,63 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
    jalankan dan masukan nomor/akun whatsapp yang akan dijadikan Bot WhatsApp, jika code pairing sudah muncul, masukan code pairing tersebut ke Perangkat tertaut.<br>
    Dan selamat Bot berhasil di jalankan. 
+
+- - -
+
+## Dokumentasi System Plugins
+
+<h3 align="left">
+Berikut adalah panduan lengkap untuk membuat plugin dengan sistem plugin saya pada bot WhatsApp yang menggunakan @whiskeysockets/baileys.
+</h3>
+
+### Struktur Plugins
+<h4 align="center">
+Setiap plugin memiliki struktur dasar sebagai berikut:
+</h4>
+
+```ts
+const fs = require('fs');
+const path = require('path');
+require('../../toolkit/setting');
+
+module.exports = {
+  name: 'Nama Plugin',
+  command: ['command1', 'command2'],
+  tags: 'Kategori Plugin',
+  desc: 'Deskripsi Singkat Plugin',
+
+  run: async (conn, message, { args, isPrefix }) => {
+    try {
+      const chatId = message.key.remoteJid;
+      const isGroup = chatId.endsWith('@g.us');
+      const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+      const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
+      const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+
+      if (!textMessage) return;
+
+      // Deteksi prefix yang digunakan
+      const prefix = isPrefix.find(p => textMessage.startsWith(p));
+      if (!prefix) return;
+
+      // Ambil perintah setelah prefix
+      const commandText = textMessage.slice(prefix.length).trim().split(/\s+/)[0].toLowerCase();
+      if (!module.exports.command.includes(commandText)) return;
+
+      // Eksekusi logika plugin di sini
+      await conn.sendMessage(chatId, { text: '✅ Plugin Berjalan!' }, { quoted: message });
+
+    } catch (err) {
+      console.error(err);
+      conn.sendMessage(chatId, { text: '❌ Terjadi kesalahan, coba lagi nanti.' }, { quoted: message });
+    }
+  }
+};
+```
+
+### Penjelasan Property Plugins
+
+
 
 ## Request & Fix 
    laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
