@@ -127,9 +127,9 @@ Salin atau ketik promt seperti yang ada di bawah ini di termux
 
 ## Dokumentasi System Plugins
 
-<h3 align="left">
+<p align="left">
 Berikut adalah panduan lengkap untuk membuat plugin dengan sistem plugin saya pada bot WhatsApp yang menggunakan @whiskeysockets/baileys.
-</h3>
+</p>
 
 ### Struktur Plugins
 <h4 align="center">
