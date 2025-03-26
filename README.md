@@ -136,7 +136,7 @@ Berikut adalah panduan lengkap untuk membuat plugin dengan sistem plugin saya pa
 Setiap plugin memiliki struktur dasar sebagai berikut:
 </h4>
 
-```ts
+```js
 const fs = require('fs');
 const path = require('path');
 require('../../toolkit/setting');
