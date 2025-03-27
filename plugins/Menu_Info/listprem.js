@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   name: 'listprem',
   command: ['listprem', 'listpremium'],
-  tags: ['Owner Menu'],
+  tags: 'Info Menu',
   desc: 'Menampilkan daftar pengguna premium.',
 
   run: async (conn, message, { isPrefix }) => {
@@ -27,18 +27,18 @@ module.exports = {
       if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
         return conn.sendMessage(chatId, {
           text: '❌ Hanya owner yang dapat menggunakan perintah ini.',
-        });
+        }, { quoted: message });
       }
 
       const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
       if (!fs.existsSync(dbPath)) {
-        return conn.sendMessage(chatId, { text: '⚠️ Database tidak ditemukan!' });
+        return conn.sendMessage(chatId, { text: '⚠️ Database tidak ditemukan!' }, { quoted: message });
       }
 
       let db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
 
       if (!db.Private || typeof db.Private !== 'object') {
-        return conn.sendMessage(chatId, { text: '⚠️ Database Private tidak valid!' });
+        return conn.sendMessage(chatId, { text: '⚠️ Database Private tidak valid!' }, { quoted: message });
       }
 
       const premiumUsers = Object.entries(db.Private)
@@ -50,7 +50,7 @@ module.exports = {
         }));
 
       if (premiumUsers.length === 0) {
-        return conn.sendMessage(chatId, { text: '📌 Saat ini tidak ada pengguna premium.' });
+        return conn.sendMessage(chatId, { text: '📌 Saat ini tidak ada pengguna premium.' }, { quoted: message });
       }
 
       let text = `📌 *Daftar Pengguna Premium*\n\n`;
@@ -64,12 +64,12 @@ module.exports = {
 
       text += `Total: ${premiumUsers.length} pengguna premium.`;
 
-      conn.sendMessage(chatId, { text });
+      conn.sendMessage(chatId, { text }, { quoted: message });
     } catch (error) {
       console.error('Error di plugin listprem.js:', error);
       conn.sendMessage(chatId, {
         text: `❌ Terjadi kesalahan saat menampilkan daftar pengguna premium.`,
-      });
+      }, { quoted: message });
     }
   },
 };
