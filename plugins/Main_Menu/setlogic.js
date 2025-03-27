@@ -6,9 +6,10 @@ function getConfig() {
 }
 
 module.exports = {
-  name: 'Set Logic AI',
+  name: 'setlogic',
   command: ['setlogic'],
   tags: 'Ai Menu',
+  desc: 'Menyetel/menseting logika AI',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
@@ -28,11 +29,11 @@ module.exports = {
 
     const ownerNumbers = getConfig().ownerSetting.ownerNumber;
     if (!ownerNumbers.includes(senderId.replace(/\D/g, ''))) {
-      return conn.sendMessage(chatId, { text: '❌ Hanya owner yang dapat menggunakan perintah ini.', quoted: message });
+      return conn.sendMessage(chatId, { text: '❌ Hanya owner yang dapat menggunakan perintah ini.'}, { quoted: message });
     }
 
     if (args.length === 0) {
-      return conn.sendMessage(chatId, { text: `⚙️ Gunakan perintah:\n${prefix}setlogic [teks logika]\n\n📌 Contoh:\n${prefix}setlogic Ini adalah logika baru.` });
+      return conn.sendMessage(chatId, { text: `⚙️ Gunakan perintah:\n${prefix}setlogic [teks logika]\n\n📌 Contoh:\n${prefix}setlogic Ini adalah logika baru.` }, { quoted: message });
     }
 
     const newLogic = args.join(" ");
@@ -42,9 +43,9 @@ module.exports = {
       config.botSetting.logic = newLogic;
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
-      conn.sendMessage(chatId, { text: `✅ Logika AI berhasil diubah menjadi:\n\n"${newLogic}"` });
+      conn.sendMessage(chatId, { text: `✅ Logika AI berhasil diubah menjadi:\n\n"${newLogic}"` }, { quoted: message });
     } catch (error) {
-      conn.sendMessage(chatId, { text: "⚠️ Terjadi kesalahan saat menyimpan pengaturan!" });
+      conn.sendMessage(chatId, { text: "⚠️ Terjadi kesalahan saat menyimpan pengaturan!" }, { quoted: message });
     }
   }
 };

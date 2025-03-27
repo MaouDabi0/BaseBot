@@ -13,9 +13,9 @@ const writeDB = (data) => {
 };
 
 module.exports = {
-  name: 'ResetAiChat',
+  name: 'resetaichat',
   command: ['resetaichat', 'resetai'],
-  tags: ['Ai Menu'],
+  tags: 'Ai Menu',
   desc: 'Mereset data Auto-AI pada pengguna atau grup (Hanya Owner).',
 
   run: async (conn, message, { isPrefix }) => {
@@ -38,16 +38,12 @@ module.exports = {
 
       if (!global.ownerNumber.includes(senderId.replace(/\D/g, ''))) {
         return conn.sendMessage(chatId, { 
-          text: '⚠️ Hanya owner yang dapat menggunakan perintah ini.', 
-          quoted: message 
-        });
+          text: '⚠️ Hanya owner yang dapat menggunakan perintah ini.' }, { quoted: message });
       }
 
       if (args.length < 1) {
         return conn.sendMessage(chatId, {
-          text: `📌 *Cara penggunaan:*\n\n${prefix}resetaichat group (id grup)\n${prefix}resetaichat pengguna (nomor) atau reply pesan pengguna.`,
-          quoted: message,
-        });
+          text: `📌 *Cara penggunaan:*\n\n${prefix}resetaichat group (id grup)\n${prefix}resetaichat pengguna (nomor) atau reply pesan pengguna.` }, { quoted: message });
       }
 
       let db = readDB();
@@ -63,30 +59,26 @@ module.exports = {
           targetId = quotedMessage.split('@')[0];
         } else {
           return conn.sendMessage(chatId, {
-            text: '⚠️ Silakan ketik `.resetaichat pengguna <nomor>` atau reply pesan pengguna yang ingin direset.',
-            quoted: message,
-          });
+            text: '⚠️ Silakan ketik `.resetaichat pengguna <nomor>` atau reply pesan pengguna yang ingin direset.'
+          }, { quoted: message });
         }
       } else if (type === 'group') {
         if (args.length < 2) {
           return conn.sendMessage(chatId, {
-            text: `⚠️ Untuk reset grup, masukkan ID grup!\n\nContoh: *${prefix}resetaichat group 1203630253289987*`,
-            quoted: message,
-          });
+            text: `⚠️ Untuk reset grup, masukkan ID grup!\n\nContoh: *${prefix}resetaichat group 1203630253289987*`
+          }, { quoted: message });
         }
         targetId = args[1].replace(/\D/g, '');
       } else {
         return conn.sendMessage(chatId, {
-          text: `⚠️ Jenis reset tidak valid! Gunakan *pengguna* atau *group*.\n\nContoh: *${prefix}resetaichat pengguna 6281234567890*`,
-          quoted: message,
-        });
+          text: `⚠️ Jenis reset tidak valid! Gunakan *pengguna* atau *group*.\n\nContoh: *${prefix}resetaichat pengguna 6281234567890*`
+        }, { quoted: message });
       }
 
       if (!targetId) {
         return conn.sendMessage(chatId, {
-          text: '⚠️ ID tidak valid!',
-          quoted: message,
-        });
+          text: '⚠️ ID tidak valid!'
+        }, { quoted: message });
       }
 
       const formattedId = type === 'group' ? `${targetId}@g.us` : `${targetId}@s.whatsapp.net`;
@@ -98,21 +90,18 @@ module.exports = {
         writeDB(db);
 
         return conn.sendMessage(chatId, {
-          text: `✅ Data Auto-AI untuk *${type}* dengan ID *${targetId}* telah direset.`,
-          quoted: message,
-        });
+          text: `✅ Data Auto-AI untuk *${type}* dengan ID *${targetId}* telah direset.`
+        }, { quoted: message });
       } else {
         return conn.sendMessage(chatId, {
-          text: `⚠️ Tidak ditemukan data Auto-AI untuk *${type}* dengan ID *${targetId}*.`,
-          quoted: message,
-        });
+          text: `⚠️ Tidak ditemukan data Auto-AI untuk *${type}* dengan ID *${targetId}*.`
+        }, { quoted: message });
       }
       
     } catch (error) {
       conn.sendMessage(chatId, {
-        text: `❌ Terjadi kesalahan: ${error.message || error}`,
-        quoted: message,
-      });
+        text: `❌ Terjadi kesalahan: ${error.message || error}`
+      }, { quoted: message });
     }
   },
 };

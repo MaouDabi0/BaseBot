@@ -18,9 +18,9 @@ const writeDB = (data) => {
 };
 
 module.exports = {
-  name: 'LuminAi',
+  name: 'autoai',
   command: ['ai', 'autoai'],
-  tags: ['Ai Menu'],
+  tags: 'Ai Menu',
   desc: 'Mengaktifkan atau menonaktifkan AI pada chat tertentu.',
 
   run: async (conn, message, { isPrefix }) => {

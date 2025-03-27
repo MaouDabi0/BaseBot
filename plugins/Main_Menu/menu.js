@@ -6,8 +6,9 @@ const readmore = more.repeat(4001);
 
 module.exports = {
   name: 'menu',
-  command: ['menu', 'help'],
+  command: ['menu'],
   tags: 'Info Menu',
+
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
     const isGroup = chatId.endsWith('@g.us');
