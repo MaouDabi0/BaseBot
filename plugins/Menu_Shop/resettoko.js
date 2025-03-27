@@ -4,8 +4,8 @@ const tokoPath = './toolkit/set/toko.json';
 module.exports = {
   name: 'resettoko',
   command: ['resettoko'],
-  tags: ['Shop Menu'],
-  desc: "Mereset daftar toko di toko.json (hanya storeSetting)",
+  tags: 'Shop Menu',
+  desc: 'Mereset daftar toko di toko.json (hanya storeSetting)',
 
   run: async (conn, message, { isPrefix }) => {
     try {

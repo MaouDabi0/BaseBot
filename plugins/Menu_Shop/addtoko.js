@@ -3,9 +3,9 @@ const path = require('path');
 
 module.exports = {
   name: 'addtoko',
-  command: ["addtoko"],
-  tags: ["Shop Menu"],
-  desc: "Menambahkan nama toko ke dalam daftar toko dan membuat file plugin toko",
+  command: ['addtoko'],
+  tags: 'Shop Menu',
+  desc: 'Menambahkan nama toko ke dalam daftar toko dan membuat file plugin toko',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;

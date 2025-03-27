@@ -4,9 +4,9 @@ const config = require('../../toolkit/set/config.json');
 
 module.exports = {
   name: 'settoko',
-  command: ["settoko"],
-  tags: ["Shop Menu"],
-  desc: "Mengatur atau menulis barang dan harga ke dalam toko.json",
+  command: ['settoko'],
+  tags: 'Shop Menu',
+  desc: 'Mengatur atau menulis barang dan harga ke dalam toko.json',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;

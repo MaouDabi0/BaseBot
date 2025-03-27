@@ -5,7 +5,7 @@ const config = require('../../toolkit/set/config.json');
 module.exports = {
   name: 'deltoko',
   command: ['deltoko', 'deletetoko'],
-  tags: ['Shop Menu'],
+  tags: 'Shop Menu',
   desc: 'Menghapus toko',
 
   run: async (conn, message, { isPrefix }) => {
