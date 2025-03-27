@@ -1,10 +1,10 @@
 const facebook = require("../../toolkit/scrape/facebook");
 
 module.exports = {
-  name: "Facebook Downloader",
-  command: ["fb", "fbdl", "facebook"],
-  tags: ["Download Menu"],
-  desc: "Mendownload media dari Facebook",
+  name: 'facebook',
+  command: ['fb', 'fbdl', 'facebook'],
+  tags: 'Download Menu',
+  desc: 'Mendownload media dari Facebook',
 
   async run(conn, message, { isPrefix }) {
     const chatId = message.key.remoteJid;
@@ -27,7 +27,7 @@ module.exports = {
 
     if (!args[0]) {
       return conn.sendMessage(chatId, {
-        text: `🚨 *Format salah!*\nGunakan: *${isPrefix}fb <url>*`,
+        text: `🚨 *Format salah!*\nGunakan: *${prefix}fb <url>*`,
       });
     }
 

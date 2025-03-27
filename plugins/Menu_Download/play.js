@@ -2,10 +2,10 @@ const fetch = require("node-fetch");
 const { ytmp3, ytsearch } = require("ruhend-scraper");
 
 module.exports = {
-  name: "play",
-  command: ["play", "song", "lagu", "ply"],
-  tags: ["Download Menu"],
-  desc: "Mendownload media dalam bentuk musik atau mp3 dari YouTube",
+  name: 'play',
+  command: ['play', 'song', 'lagu', 'ply'],
+  tags: 'Download Menu',
+  desc: 'Mendownload media dalam bentuk musik atau mp3 dari YouTube',
 
   run: async (conn, message, { isPrefix }) => {
     try {

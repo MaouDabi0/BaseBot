@@ -1,18 +1,19 @@
-const fetch = require("node-fetch");
+const { ytsearch, ytmp3, ytmp4 } = require('ruhend-scraper');
+const fetch = require('node-fetch');
 
 module.exports = {
-  name: 'ytDownload',
-  command: ["ytmp4", "ytmp3"],
-  tags: ['Download Menu'],
-  desc: 'Mendownload media berupa musik dan video dari YouTube',
+  name: 'youtube',
+  command: ['ytsearch', 'yts', 'ytmp3', 'yta', 'ytaudio', 'ytmp4', 'ytv'],
+  tags: 'Download Menu',
+  desc: 'Download audio, video, atau mencari video dari YouTube',
 
-  run: async (conn, message, { isPrefix }) => {
+  run: async (conn, message) => {
     try {
-      const chatId = message?.key?.remoteJid;
-      const isGroup = chatId.endsWith("@g.us");
-      const senderId = message.key.participant || chatId.replace(/:\d+@/, "@");
+      const chatId = message.key.remoteJid;
+      const isGroup = chatId.endsWith('@g.us');
+      const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, '@');
+      const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || '';
 
-      const textMessage = message.message?.conversation || message.message?.extendedTextMessage?.text || "";
       if (!textMessage) return;
 
       const prefix = isPrefix.find((p) => textMessage.startsWith(p));
@@ -20,55 +21,56 @@ module.exports = {
 
       const args = textMessage.slice(prefix.length).trim().split(/\s+/);
       const commandText = args.shift().toLowerCase();
-
       if (!module.exports.command.includes(commandText)) return;
 
-      if (!args[0]) {
-        return conn.sendMessage(chatId, { text: "❌ Masukkan link YouTube yang valid!" }, { quoted: message });
-      }
-
-      let url = args[0].trim();
-      if (!/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(url)) {
-        return conn.sendMessage(chatId, { text: "❌ Link YouTube tidak valid!" }, { quoted: message });
-      }
-
-      let type = commandText === "ytmp4" ? "mp4" : "mp3";
-      let apiUrl = `https://ai.xterm.codes/api/yt?url=${encodeURIComponent(url)}&type=${type}&apikey=Bell409`;
-
-      let res = await fetch(apiUrl, { timeout: 15000 });
-      if (!res.ok) throw new Error(`🌐 Gagal mengakses API! (Status: ${res.status})`);
-
-      let json = await res.json();
-      if (!json.status || !json.url) throw new Error("❌ Gagal mendapatkan data dari API!");
-
-      let caption = `*YouTube ${type.toUpperCase()}*\n\n` +
-        `📌 *Judul:* ${json.title}\n` +
-        `⏳ *Durasi:* ${json.duration}\n` +
-        `📥 *Ukuran:* ${json.size}\n\n` +
-        `⚡ Mohon tunggu, sedang mengirim file...`;
-
-      let sendMsg = { image: { url: json.thumbnail }, caption };
-      await conn.sendMessage(chatId, sendMsg, { quoted: message });
-
-      // Coba kirim file, retry jika gagal
-      let maxRetry = 3;
-      for (let attempt = 1; attempt <= maxRetry; attempt++) {
-        try {
-          let media = {
-            document: { url: json.url },
-            mimetype: type === "mp4" ? "video/mp4" : "audio/mpeg",
-            fileName: `${json.title}.${type}`,
-          };
-          await conn.sendMessage(chatId, media, { quoted: message });
-          return; // Berhenti jika sukses
-        } catch (err) {
-          console.warn(`⚠️ Gagal mengirim file (Percobaan ${attempt}/${maxRetry}):`, err);
-          if (attempt === maxRetry) throw new Error("❌ Gagal mengirim file setelah beberapa percobaan!");
+      if (['ytsearch', 'yts'].includes(commandText)) {
+        if (!args.length) {
+          return conn.sendMessage(chatId, { text: `Masukkan info yang ingin dicari!\nContoh: *${prefix}${commandText} laila canggung*` }, { quoted: message });
         }
+        const { video, channel } = await ytsearch(args.join(' '));
+        const sthumb = "https://qu.ax/OcWmv.jpeg";
+        const teks = [...video, ...channel].map(v => {
+          switch (v.type) {
+            case 'video':
+              return `🎀 *${v.title}*\n🔗 ${v.url}\n🕒 Duration: ${v.durationH}\n📅 Uploaded: ${v.publishedTime}\n📈 ${v.view} views`;
+            case 'channel':
+              return `🎀 *${v.channelName}*\n🔗 ${v.url}\n📛 _${v.subscriberH} Subscriber_\n🎥 ${v.videoCount} video`;
+          }
+        }).filter(Boolean).join('\n\n───────────────────\n\n');
+
+        await conn.sendMessage(chatId, { text: `*Salin link YouTube-nya*\nKetik *${prefix}ytmp3 [link]* untuk audio\nKetik *${prefix}ytmp4 [link]* untuk video\n\n${teks}` }, { quoted: message });
+        return;
       }
-    } catch (err) {
-      console.error("❌ Error di ytDownload.js:", err);
-      conn.sendMessage(message.key.remoteJid, { text: `⚠️ Terjadi kesalahan: ${err.message}` }, { quoted: message });
+
+      if (['ytmp3', 'yta', 'ytaudio'].includes(commandText)) {
+        if (!args[0]) {
+          return conn.sendMessage(chatId, { text: `Masukkan link YouTube!\nContoh: *${prefix}${commandText} https://youtu.be/MvsAesQ-4zA*` }, { quoted: message });
+        }
+
+        const { title, audio, thumbnail } = await ytmp3(args[0]);
+        const media = await (await fetch(audio)).buffer();
+
+        await conn.sendMessage(chatId, { text: `🎵 Mengunduh audio dari *${title}*...` }, { quoted: message });
+        await conn.sendMessage(chatId, { audio: media, mimetype: 'audio/mpeg', ptt: false }, { quoted: message });
+        return;
+      }
+
+      if (['ytmp4', 'ytv'].includes(commandText)) {
+        if (!args[0]) {
+          return conn.sendMessage(chatId, { text: `Masukkan link YouTube!\nContoh: *${prefix}${commandText} https://youtu.be/MvsAesQ-4zA*` }, { quoted: message });
+        }
+
+        const { title, video, author, description, duration, views, upload, thumbnail } = await ytmp4(args[0]);
+        let caption = `📹 *YouTube Video*\n⭔ *Judul:* ${title}\n⭔ *Author:* ${author}\n⭔ *Deskripsi:* ${description}\n⭔ *Durasi:* ${duration}\n⭔ *Views:* ${views}\n⭔ *Upload:* ${upload}`;
+        
+        await conn.sendMessage(chatId, { image: { url: thumbnail }, caption }, { quoted: message });
+        await conn.sendMessage(chatId, { video: { url: video }, caption }, { quoted: message });
+        return;
+      }
+      
+    } catch (error) {
+      console.error(error);
+      conn.sendMessage(message.key.remoteJid, { text: 'Terjadi kesalahan saat memproses permintaan. Coba lagi nanti!' }, { quoted: message });
     }
-  },
-};
+  }
+}
