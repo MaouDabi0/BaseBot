@@ -5,8 +5,7 @@ const configPath = path.join(__dirname, '../../toolkit/set/config.json');
 module.exports = {
   name: 'getfile',
   command: ['getfile', 'gf'],
-  tags: 'Tools Menu',
-  help: ['getfile <path/to/file>'],
+  tags: 'Owner Menu',
   desc: 'Menampilkan isi file dalam bentuk teks',
 
   run: async (conn, message, { isPrefix }) => {

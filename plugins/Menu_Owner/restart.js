@@ -3,7 +3,7 @@ const cleartemp = require('./cleartemp');
 module.exports = {
   name: 'restart',
   command: ['restart', 'rt'],
-  tags: ['Owner Menu'],
+  tags: 'Owner Menu',
   desc: 'Merestart bot',
 
   run: async (conn, message, { isPrefix }) => {

@@ -4,10 +4,10 @@ const path = require("path");
 const configPath = path.join(__dirname, "../../toolkit/set/config.json");
 
 module.exports = {
-  name: "setname",
-  command: ["setname", "setfullname"],
-  tags: ["Owner Menu"],
-  desc: "Mengatur nama bot",
+  name: 'setname',
+  command: ['setname', 'setfullname'],
+  tags: 'Owner Menu',
+  desc: 'Mengatur nama bot',
 
   run: async (conn, message, { isPrefix }) => {
     try {
@@ -83,6 +83,5 @@ module.exports = {
         { quoted: message }
       );
     }
-  },
-  limit: 1,
+  }
 };

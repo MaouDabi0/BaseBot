@@ -5,7 +5,7 @@ const config = require('../../toolkit/set/config.json');
 module.exports = {
   name: 'cleartemp',
   command: ['cleartemp', 'ctemp'],
-  tags: ['Owner Menu'],
+  tags: 'Owner Menu',
   desc: 'Membersihkan folder temp',
 
   run: async (conn, message, { isPrefix }) => {

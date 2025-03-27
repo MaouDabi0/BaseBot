@@ -3,9 +3,9 @@ const path = require('path');
 const AdmZip = require('adm-zip');
 
 module.exports = {
-  name: 'Backup',
+  name: 'backup',
   command: ['backup'],
-  tags: ['Owner Menu'],
+  tags: 'Owner Menu',
   desc: 'Membackup data bot',
 
   run: async (conn, message, { isPrefix }) => {
@@ -67,7 +67,7 @@ module.exports = {
         mimetype: "application/zip",
         fileName: zipFileName,
         caption: `📦 *Backup berhasil dibuat!*\nBerikut adalah arsip ZIP dari bot.`
-      });
+      }, { quoted: message });
 
       setTimeout(() => fs.unlinkSync(zipFilePath), 5000);
     } catch (error) {

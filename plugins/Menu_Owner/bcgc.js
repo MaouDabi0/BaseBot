@@ -4,10 +4,11 @@ let isBroadcasting = false;
 const delayTime = 5 * 60 * 1000;
 
 module.exports = {
-  name: "bcgc",
-  command: ["bcgc", "broadcastgc"],
-  tags: ["Owner Menu"],
-  desc: "Mengirim pesan broadcast ke semua grup (hanya untuk owner).",
+  name: 'bcgc',
+  command: ['bcgc', 'broadcastgc'],
+  tags: 'Owner Menu',
+  desc: 'Mengirim pesan broadcast ke semua grup (hanya untuk owner).',
+
   run: async (conn, message, { isPrefix }) => {
     const chatId = message?.key?.remoteJid;
     const isGroup = chatId.endsWith("@g.us");
@@ -32,22 +33,22 @@ module.exports = {
     }
 
     if (args.length === 1) {
-      return conn.sendMessage(chatId, { text: `📢 *Cara menggunakan perintah:*\n\nGunakan format berikut:\n\`${prefix}bcgc [pesan]\`\n\n*Contoh:*\n\`${prefix}bcgc Halo semua! Jangan lupa cek fitur baru di bot ini.\`` });
+      return conn.sendMessage(chatId, { text: `📢 *Cara menggunakan perintah:*\n\nGunakan format berikut:\n\`${prefix}bcgc [pesan]\`\n\n*Contoh:*\n\`${prefix}bcgc Halo semua! Jangan lupa cek fitur baru di bot ini.\`` }, { quoted: message });
     }
 
     if (isBroadcasting) {
-      return conn.sendMessage(chatId, { text: "⏳ Harap tunggu! Anda harus menunggu sebelum menjalankan perintah ini lagi." });
+      return conn.sendMessage(chatId, { text: "⏳ Harap tunggu! Anda harus menunggu sebelum menjalankan perintah ini lagi." }, { quoted: message });
     }
 
     const broadcastMessage = textMessage.slice(commandText.length).trim();
     if (!broadcastMessage) {
-      return conn.sendMessage(chatId, { text: "❌ Pesan broadcast tidak boleh kosong! Gunakan format:\n`${prefix}bcgc [pesan]`" });
+      return conn.sendMessage(chatId, { text: "❌ Pesan broadcast tidak boleh kosong! Gunakan format:\n`${prefix}bcgc [pesan]`" }, { quoted: message });
     }
 
     const groups = await conn.groupFetchAllParticipating();
     const groupIds = Object.keys(groups);
     if (groupIds.length === 0) {
-      return conn.sendMessage(chatId, { text: "❌ Bot tidak tergabung dalam grup mana pun." });
+      return conn.sendMessage(chatId, { text: "❌ Bot tidak tergabung dalam grup mana pun." }, { quoted: message });
     }
 
     isBroadcasting = true;
@@ -55,16 +56,16 @@ module.exports = {
 
     let success = 0, failed = 0;
     for (const id of groupIds) {
-      await conn.sendMessage(id, { text: `📢 *Broadcast:*\n\n${broadcastMessage}` })
+      await conn.sendMessage(id, { text: `📢 *Broadcast:*\n\n${broadcastMessage}` }, { quoted: message })
         .then(() => success++)
         .catch(() => failed++);
     }
 
-    conn.sendMessage(chatId, { text: `✅ Broadcast selesai!\n\n📤 Berhasil: ${success} grup\n❌ Gagal: ${failed} grup\n\n⏳ Harap tunggu ${delayTime / 60000} menit sebelum menggunakan perintah ini lagi.` });
+    conn.sendMessage(chatId, { text: `✅ Broadcast selesai!\n\n📤 Berhasil: ${success} grup\n❌ Gagal: ${failed} grup\n\n⏳ Harap tunggu ${delayTime / 60000} menit sebelum menggunakan perintah ini lagi.` }, { quoted: message });
 
     setTimeout(() => {
       isBroadcasting = false;
-      conn.sendMessage(chatId, { text: "✅ Perintah broadcast sekarang bisa digunakan lagi." });
+      conn.sendMessage(chatId, { text: "✅ Perintah broadcast sekarang bisa digunakan lagi." }, { quoted: message });
     }, delayTime);
   }
 };

@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   name: 'deletefile',
   command: ['deletefile', 'df'],
-  tags: ['Owner Menu'],
+  tags: 'Owner Menu',
   desc: 'Menghapus file/folder',
 
   run: async (conn, message, { isPrefix }) => {

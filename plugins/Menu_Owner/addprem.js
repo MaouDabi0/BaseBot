@@ -26,8 +26,8 @@ module.exports = {
 
       if (args.length < 2) {
         return conn.sendMessage(chatId, {
-          text: `📌 Gunakan format yang benar:\n\n*${prefix}addprem @tag 7h*\natau\n*${prefix}addprem nomor 7h*`,
-        });
+          text: `📌 Gunakan format yang benar:\n\n*${prefix}addprem @tag 7h*\natau\n*${prefix}addprem nomor 7h*`
+        }, { quoted: message });
       }
 
       const dbPath = path.join(__dirname, '../../toolkit/db/database.json');
@@ -53,8 +53,8 @@ module.exports = {
       const match = durationInput.match(/^(\d+)([hmd])$/);
       if (!match) {
         return conn.sendMessage(chatId, {
-          text: `❗ Format durasi tidak valid! Gunakan format seperti 7h (jam), 1d (hari), atau 30m (menit).`,
-        });
+          text: `❗ Format durasi tidak valid! Gunakan format seperti 7h (jam), 1d (hari), atau 30m (menit).`
+        }, { quoted: message });
       }
 
       const value = parseInt(match[1]);
@@ -77,8 +77,8 @@ module.exports = {
 
       if (!userKey) {
         return conn.sendMessage(chatId, {
-          text: `❌ Pengguna tidak ada di database!`,
-        });
+          text: `❌ Pengguna tidak ada di database!`
+        }, { quoted: message });
       }
 
       db.Private[userKey].premium = {
@@ -89,11 +89,11 @@ module.exports = {
       fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 
       conn.sendMessage(chatId, {
-        text: `✅ Pengguna *${userKey}* (${targetNumber}) telah menjadi *Premium* selama ${value} ${unit === 'h' ? 'jam' : unit === 'd' ? 'hari' : 'menit'}!`,
-      });
+        text: `✅ Pengguna *${userKey}* (${targetNumber}) telah menjadi *Premium* selama ${value} ${unit === 'h' ? 'jam' : unit === 'd' ? 'hari' : 'menit'}!`
+      }, { quoted: message });
     } catch (error) {
       console.error('Error di plugin addprem.js:', error);
-      conn.sendMessage(chatId, { text: '⚠️ Terjadi kesalahan saat menambahkan status premium!' });
+      conn.sendMessage(chatId, { text: '⚠️ Terjadi kesalahan saat menambahkan status premium!' }, { quoted: message });
     }
   },
 };

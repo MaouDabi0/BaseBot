@@ -2,10 +2,10 @@ const fs = require("fs");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
 module.exports = {
-  name: "setpp",
-  command: ["setpp", "setprofile"],
-  tags: ["Owner Menu"],
-  desc: "Mengubah foto profil bot (hanya untuk owner).",
+  name: 'setpp',
+  command: ['setpp', 'setprofile'],
+  tags: 'Owner Menu',
+  desc: 'Mengubah foto profil bot (hanya untuk owner).',
 
   run: async (conn, message, { isPrefix }) => {
     try {

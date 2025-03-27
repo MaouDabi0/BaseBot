@@ -5,8 +5,7 @@ const configPath = path.join(__dirname, '../../toolkit/set/config.json');
 module.exports = {
   name: 'savefile',
   command: ['savefile', 'sf'],
-  tags: 'Tools Menu',
-  help: ['savefile <path/to/file>'],
+  tags: 'Owner Menu',
   desc: 'Menulis ulang file dengan teks dari pesan yang dikutip',
 
   run: async (conn, message, { isPrefix }) => {

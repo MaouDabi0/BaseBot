@@ -2,7 +2,7 @@ const { isJidGroup } = require('@whiskeysockets/baileys');
 const config = require('../../toolkit/set/config.json');
 
 module.exports = {
-  name: 'invite',
+  name: 'masuk',
   command: ['masuk', 'gabung'],
   tags: 'Owner Menu',
   desc: 'Menambahkan bot ke group',
