@@ -3,42 +3,35 @@ const path = require('path');
 
 const dbFile = path.join(__dirname, '../../toolkit/db/database.json');
 
-// Pastikan file database ada
 if (!fs.existsSync(dbFile)) {
   fs.writeFileSync(dbFile, JSON.stringify({ Grup: {} }, null, 2));
 }
 
-// Fungsi membaca database
 const readDB = () => {
   let data = fs.readFileSync(dbFile, 'utf-8');
   return data ? JSON.parse(data) : { Grup: {} };
 };
 
-// Fungsi menyimpan database
 const saveDB = (data) => {
   fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
 };
 
-// Fungsi mendapatkan status welcome
 const getWelcomeStatus = (chatId) => {
   let db = readDB();
   let groupData = Object.values(db.Grup || {}).find(group => group.Id === chatId);
   return groupData?.Welcome?.welcome || false;
 };
 
-// Fungsi mendapatkan teks welcome
 const getWelcomeText = (chatId) => {
   let db = readDB();
   let groupData = Object.values(db.Grup || {}).find(group => group.Id === chatId);
   return groupData?.Welcome?.welcomeText || "👋 Selamat datang @user di grup!";
 };
 
-// Fungsi mengatur status welcome dan teksnya
 const setWelcomeSettings = (chatId, groupName, status, text) => {
   let db = readDB();
   db.Grup = db.Grup || {};
   
-  // Buat entri grup jika belum ada
   db.Grup[groupName] = db.Grup[groupName] || { Id: chatId, Welcome: { welcome: false, welcomeText: "" } };
   
   db.Grup[groupName].Welcome.welcome = status;
@@ -47,11 +40,10 @@ const setWelcomeSettings = (chatId, groupName, status, text) => {
   saveDB(db);
 };
 
-// Export fungsi utama
 module.exports = {
   name: 'welcome',
   command: ['welcome'],
-  tags: ['Group Menu'],
+  tags: 'Group Menu',
   desc: 'Mengatur fitur welcome di grup',
 
   run: async (conn, message, { isPrefix }) => {

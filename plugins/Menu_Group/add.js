@@ -1,8 +1,8 @@
 module.exports = {
-  name: "add",
-  command: ["add", "invite", "tambahkan"],
-  tags: ["Group Menu"],
-  desc: "Menambahkan anggota ke grup (hanya bisa digunakan oleh admin).",
+  name: 'add',
+  command: ['add', 'invite', 'tambahkan'],
+  tags: 'Group Menu',
+  desc: 'Menambahkan anggota ke grup (hanya bisa digunakan oleh admin).',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message?.key?.remoteJid;

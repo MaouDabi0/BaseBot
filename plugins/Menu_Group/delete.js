@@ -1,7 +1,7 @@
 module.exports = {
-  name: "delete",
-  command: ["d", "del"],
-  tags: ["Group Menu"],
+  name: 'delete',
+  command: ['d', 'del'],
+  tags: 'Group Menu',
   desc: 'Menghapus pesan pengguna di group',
 
   run: async (conn, message, { isPrefix }) => {

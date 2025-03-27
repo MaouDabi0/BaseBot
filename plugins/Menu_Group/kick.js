@@ -1,8 +1,8 @@
 module.exports = {
-  name: "kick",
-  command: ["kick", "tendang", "keluar"],
-  tags: ["Group Menu"],
-  desc: "Mengeluarkan anggota dari grup (hanya bisa digunakan oleh admin).",
+  name: 'kick',
+  command: ['kick', 'tendang', 'keluar'],
+  tags: 'Group Menu',
+  desc: 'Mengeluarkan anggota dari grup (hanya bisa digunakan oleh admin).',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message?.key?.remoteJid;
