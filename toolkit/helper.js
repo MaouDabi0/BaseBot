@@ -18,7 +18,7 @@ const Connect = {
 
 // Fungsi Format Waktu
 const Format = {
-  time: () => moment().format('HH:mm'), // Format jam dan menit
+  time: () => moment().format('HH:mm'),
   date: (timestamp) => moment(timestamp * 1000).format('DD-MM-YYYY'),
   uptime: () => {
     let totalSeconds = process.uptime();
@@ -33,55 +33,17 @@ const Format = {
 const download = async (url, filePath) => {
   try {
     const writer = fs.createWriteStream(filePath);
-    
-    // Mendapatkan stream data dari URL menggunakan axios
-    const response = await axios({
-      url,
-      method: 'GET',
-      responseType: 'stream',
-    });
+    const response = await axios({ url, method: 'GET', responseType: 'stream' });
 
-    // Menulis data ke file
     response.data.pipe(writer);
 
-    // Menunggu sampai unduhan selesai
     return new Promise((resolve, reject) => {
       writer.on('finish', resolve);
       writer.on('error', reject);
     });
   } catch (error) {
-    console.error('Error saat mendownload file:', error);
+    Connect.error('Gagal mendownload media:', error);
     throw new Error('Gagal mendownload media');
-  }
-};
-
-const pinDownload = async (url, conn, message) => {
-  try {
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
-    const imgSrc = $('img[src^="https://i.pinimg.com"]').attr('src'); // Mendapatkan URL gambar pertama
-
-    if (imgSrc) {
-      const fileName = path.basename(imgSrc);
-      const tempPath = path.join(__dirname, `../../temp/${fileName}`);
-      
-      // Download gambar
-      await download(imgSrc, tempPath);
-      
-      // Kirim media ke chat
-      await conn.sendMessage(message.from, fs.readFileSync(tempPath), { 
-        caption: 'Berikut gambar yang Anda minta!', 
-        mimetype: 'image/jpeg' 
-      });
-      
-      // Hapus file sementara setelah mengirim
-      fs.unlinkSync(tempPath);
-    } else {
-      await conn.sendMessage(message.from, '❌ Gagal menemukan gambar di URL tersebut.', { quoted: message });
-    }
-  } catch (error) {
-    console.error('❌ Error saat mendownload media:', error);
-    await conn.sendMessage(message.from, '❌ Gagal mendownload media, pastikan URL benar.', { quoted: message });
   }
 };
 
@@ -90,34 +52,37 @@ const createSticker = async (media, isVideo = false) => {
   const inputPath = path.join(tempFolder, isVideo ? 'input.mp4' : 'input.png');
   const outputPath = path.join(tempFolder, 'output.webp');
 
-  // Tulis media ke file input
   fs.writeFileSync(inputPath, media);
 
   try {
-    // Konversi media menjadi stiker menggunakan ffmpeg
-    const ffmpegCommand = isVideo
-      ? `ffmpeg -i ${inputPath} -vf "scale=512:512:flags=lanczos,format=rgba" -loop 0 -preset ultrafast -an -vsync 0 ${outputPath}`
-      : `ffmpeg -i ${inputPath} -vf scale=512:512 ${outputPath}`;
+    let ffmpegCommand;
+    
+    if (isVideo) {
+      ffmpegCommand = `ffmpeg -i ${inputPath} -vf "scale=512:512:flags=lanczos,format=rgba" -r 10 -an -vsync vfr ${outputPath}`;
+    } else {
+      ffmpegCommand = `ffmpeg -i ${inputPath} -vf "scale=512:512:flags=lanczos" ${outputPath}`;
+    }
 
     await new Promise((resolve, reject) => {
-      exec(ffmpegCommand, (err) => {
-        if (err) return reject(err);
+      exec(ffmpegCommand, (err, stdout, stderr) => {
+        if (err) {
+          console.error(`[FFMPEG ERROR] ${stderr}`);
+          return reject(new Error('FFmpeg gagal memproses media'));
+        }
         resolve();
       });
     });
 
-    // Baca hasil stiker dari file output
     const sticker = fs.readFileSync(outputPath);
 
-    // Hapus file input dan output setelah selesai
+    // Hapus file sementara
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
 
     return sticker;
   } catch (error) {
-    console.error('❌ Gagal membuat stiker:', error.message);
+    Connect.error('❌ Gagal membuat stiker:', error.message);
 
-    // Hapus file input dan output jika terjadi error
     try { fs.unlinkSync(inputPath); } catch (e) {}
     try { fs.unlinkSync(outputPath); } catch (e) {}
 
@@ -125,13 +90,13 @@ const createSticker = async (media, isVideo = false) => {
   }
 };
 
-module.exports = { Connect, createSticker, pinDownload, download, Format };
+module.exports = { Connect, createSticker, download, Format };
 
 // Hot reload untuk file ini jika ada perubahan
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {
   fs.unwatchFile(file);
-  console.log(chalk.green.bold(`[UPDATE] ${__filename}`));
+  console.log(`[UPDATE] ${__filename}`);
   delete require.cache[file];
   require(file);
 });
