@@ -4,10 +4,10 @@ const fs = require("fs").promises;
 const path = require("path");
 
 module.exports = {
-  name: "toimg",
-  command: ["toimg"],
-  tags: ["Tools Menu"],
-  desc: "Mengonversi stiker menjadi gambar",
+  name: 'toimg',
+  command: ['toimg'],
+  tags: 'Tools Menu',
+  desc: 'Mengonversi stiker menjadi gambar',
 
   run: async function (conn, message, { isPrefix }) {
     try {
