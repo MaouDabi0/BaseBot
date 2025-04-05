@@ -40,7 +40,7 @@ module.exports = {
       }
 
       if (!mediaMessage) {
-        return conn.sendMessage(chatId, { text: `📷 *Cara menggunakan perintah:*\n\nKirim gambar atau reply gambar dengan perintah:\n\`${isPrefix[0]}setpp\`` });
+        return conn.sendMessage(chatId, { text: `📷 *Cara menggunakan perintah:*\n\nKirim gambar atau reply gambar dengan perintah:\n\`${isPrefix[0]}setpp\`` }, { quoted: message });
       }
 
       const stream = await downloadContentFromMessage(mediaMessage, "image");
@@ -51,9 +51,9 @@ module.exports = {
       }
 
       await conn.updateProfilePicture(conn.user.id, buffer);
-      conn.sendMessage(chatId, { text: "✅ Foto profil bot berhasil diperbarui!" });
+      conn.sendMessage(chatId, { text: "✅ Foto profil bot berhasil diperbarui!" }, { quoted: message });
     } catch (error) {
-      conn.sendMessage(chatId, { text: "❌ Terjadi kesalahan saat memperbarui foto profil bot." });
+      conn.sendMessage(chatId, { text: "❌ Terjadi kesalahan saat memperbarui foto profil bot." }, { quoted: message });
     }
   }
 };
