@@ -29,16 +29,12 @@ module.exports = {
       const isImage = quotedMessage?.imageMessage || message.message?.imageMessage;
       const isVideo = quotedMessage?.videoMessage || message.message?.videoMessage;
 
-      const packName = global.botName;
-      const authorName = global.ownerName;
-
       if (!isImage && !isVideo) {
         return conn.sendMessage(
           message.key.remoteJid,
           {
-            text:
-              `Balas gambar/video dengan caption *${prefix}s*, *${prefix}stiker*, atau *${prefix}sticker* ` +
-              `atau kirim langsung media dengan caption yang sama!`,
+            text: `Balas gambar/video dengan caption *${prefix}s*, *${prefix}stiker*, atau *${prefix}sticker* ` +
+                  `atau kirim langsung media dengan caption yang sama!`,
           },
           { quoted: message }
         );

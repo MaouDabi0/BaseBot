@@ -2,7 +2,7 @@ const axios = require('axios');
 const uploadImage = require('../../toolkit/scrape/uploadImage.js');
 const { webp2png } = require('../../toolkit/scrape/webp2mp4.js');
 const { downloadMediaMessage } = require('@whiskeysockets/baileys');
-const { writeFileSync } = require('fs');
+const { writeFileSync, readFileSync } = require('fs');
 const { tmpdir } = require('os');
 const { exec } = require('child_process');
 const path = require('path');
@@ -29,26 +29,36 @@ module.exports = {
     const commandText = textMessage.slice(prefix.length).trim().split(/\s+/)[0].toLowerCase();
     if (!module.exports.command.includes(commandText)) return;
 
-    if (textMessage.length > 30) return conn.sendMessage(chatId, { text: "Maksimal 30 Teks!" });
+    if (textMessage.length > 100) return conn.sendMessage(chatId, { text: "Maksimal 100 karakter!" });
 
     let ppKosong = "https://nauval.mycdn.biz.id/download/1738516198286.jpeg"; 
     let pp = await conn.profilePictureUrl(senderId, "image").catch(() => ppKosong);
 
     conn.sendMessage(chatId, { react: { text: "🕛", key: message.key } });
 
+    // **Menghitung ukuran berdasarkan panjang teks**
+    const text = args.join(" ") || textMessage;
+    const words = text.split(" ").length;
+    const charCount = text.length;
+    const lineCount = Math.ceil(charCount / 20); // Estimasi jumlah baris berdasarkan karakter
+
+    // **Lebar menyesuaikan panjang teks, tinggi menyesuaikan jumlah baris**
+    let width = Math.min(600 + words * 12, 850);  // Lebar meningkat dengan kata (maks 850px)
+    let height = Math.min(300 + lineCount * 40, 500); // Tinggi meningkat dengan baris (maks 500px)
+
     let obj = {
       type: "quote",
       format: "png",
       backgroundColor: "#ffffffff",
-      width: 512,
-      height: 768,
-      scale: 2,
+      width,
+      height,
+      scale: 3,
       messages: [
         {
           entities: [],
           avatar: true,
           from: { id: 1, name: pushName, photo: { url: pp } },
-          text: args.join(" ") || textMessage,
+          text,
           replyMessage: {},
         },
       ],
@@ -73,7 +83,7 @@ module.exports = {
 
     try {
       const buffer = await generateQuotly(obj);
-      const webpBuffer = await convertToWebp(buffer);
+      const webpBuffer = await convertToWebp(buffer, width, height);
       await sendImageAsSticker(conn, chatId, webpBuffer, message);
     } catch (error) {
       conn.sendMessage(chatId, { text: "Gagal membuat kutipan." });
@@ -96,17 +106,20 @@ async function generateQuotly(obj) {
   }
 }
 
-async function convertToWebp(buffer) {
+async function convertToWebp(buffer, width, height) {
   return new Promise((resolve, reject) => {
     const tmpPath = path.join(tmpdir(), `quote_${Date.now()}.png`);
     const outputPath = path.join(tmpdir(), `quote_${Date.now()}.webp`);
     
     writeFileSync(tmpPath, buffer);
 
-    exec(`ffmpeg -i "${tmpPath}" -vf "scale=512:512:flags=lanczos" -c:v libwebp -lossless 1 "${outputPath}"`, (err) => {
-      if (err) return reject(err);
-      resolve(require('fs').readFileSync(outputPath));
-    });
+    exec(
+      `ffmpeg -i "${tmpPath}" -vf "scale=${width}:${height}:flags=lanczos" -c:v libwebp -lossless 1 -qscale 100 "${outputPath}"`,
+      (err) => {
+        if (err) return reject(err);
+        resolve(readFileSync(outputPath));
+      }
+    );
   });
 }
 
