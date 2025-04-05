@@ -66,8 +66,8 @@ const initializeDatabase = () => {
 
   if (!fs.existsSync(dbFile)) {
     const initialData = {
-      Grup: {},
-      Private: {}
+      Private: {},
+      Grup: {}
     };
     fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
     console.log(chalk.green.bold('✅ File database dibuat:', dbFile));
