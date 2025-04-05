@@ -38,8 +38,7 @@ module.exports = {
 
       if (args.length < 2) {
         return conn.sendMessage(chatId, {
-          text: `📌 Cara daftar:\n\n*${prefix}daftar Nama Kamu Umur*\n\nContoh:\n*${prefix}daftar Andi 15*`,
-        });
+          text: `📌 Cara daftar:\n\n*${prefix}daftar Nama Kamu Umur*\n\nContoh:\n*${prefix}daftar Andi 15*` }, { quoted: message });
       }
 
       const nama = args.slice(0, -1).join(' ');
@@ -47,39 +46,49 @@ module.exports = {
 
       if (isNaN(umur) || umur < 12 || umur > 100) {
         return conn.sendMessage(chatId, {
-          text: `❌ ️Maaf, umur kamu terlalu kecil untuk mendaftar.`,
-        });
+          text: `❌ ️Maaf, umur kamu terlalu kecil untuk mendaftar.` }, { quoted: message });
       }
 
       if (umur < 12) {
         return conn.sendMessage(chatId, {
-          text: `⚠️ Maaf, umur kamu terlalu kecil untuk mendaftar.`,
-        });
+          text: `⚠️ Maaf, umur kamu terlalu kecil untuk mendaftar.` }, { quoted: message });
       }
 
       if (db.Private[nama]) {
         return conn.sendMessage(chatId, {
-          text: `❌ Nama *${nama}* sudah terdaftar!\n\nGunakan nama lain atau cek profil dengan *${prefix}profile*.`,
-        });
+          text: `❌ Nama *${nama}* sudah terdaftar!\n\nGunakan nama lain atau cek profil dengan *${prefix}profile*.` }, { quoted: message });
+      }
+
+      function generateRandomId() {
+        const chars = 'abcdefghijklmnopqrstuvwxyz';
+        let randomId = '';
+        for (let i = 0; i < 7; i++) {
+          randomId += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        randomId += Math.floor(Math.random() * 100) + 1;
+        return randomId;
       }
 
       db.Private[nama] = {
         Nomor: senderId,
         umur: umur.toString(),
+        noId: generateRandomId(),
         autoai: false,
         chat: 0,
-        premium: {},
+        premium: {
+          prem: false,
+          time: 0,
+        },
       };
 
       fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 
       conn.sendMessage(chatId, {
-        text: `✅ Pendaftaran berhasil!\n\n🔹 Nama: *${nama}*\n🔹 Umur: *${umur}*\n\nKetik *${prefix}profile* untuk melihat profilmu.`,
-        contextInfo: { mentionedJid: [senderId] },
-      });
+        text: `✅ Pendaftaran berhasil!\n\n🔹 Nama: *${nama}*\n🔹 Umur: *${umur}*\n🔹 ID: *${db.Private[nama].noId}*\n\nKetik *${prefix}profile* untuk melihat profilmu.`,
+        contextInfo: { mentionedJid: [senderId] } }, { quoted: message });
     } catch (error) {
       console.error('Error di plugin daftar.js:', error);
-      conn.sendMessage(chatId, { text: '⚠️ Terjadi kesalahan saat mendaftar!' });
+      conn.sendMessage(chatId, { text: '⚠️ Terjadi kesalahan saat mendaftar!' }, { quoted: message });
     }
   },
 };
