@@ -1,22 +1,20 @@
 const fs = require('fs');
+const path = require('path');
 const moment = require('moment-timezone');
 const { exec } = require('child_process');
-const path = require('path');
 const axios = require('axios');
+const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 
-// Pastikan folder "temp" tersedia
 const tempFolder = path.join(__dirname, '../temp');
 if (!fs.existsSync(tempFolder)) {
   fs.mkdirSync(tempFolder, { recursive: true });
 }
 
-// Fungsi Logging
 const Connect = {
   log: (text) => console.log(`[LOG] ${text}`),
   error: (text) => console.error(`[ERROR] ${text}`)
 };
 
-// Fungsi Format Waktu
 const Format = {
   time: () => moment().format('HH:mm'),
   date: (timestamp) => moment(timestamp * 1000).format('DD-MM-YYYY'),
@@ -29,7 +27,6 @@ const Format = {
   }
 };
 
-// Fungsi untuk mendownload media dari URL
 const download = async (url, filePath) => {
   try {
     const writer = fs.createWriteStream(filePath);
@@ -47,7 +44,6 @@ const download = async (url, filePath) => {
   }
 };
 
-// Fungsi untuk membuat stiker dari gambar/video
 const createSticker = async (media, isVideo = false) => {
   const inputPath = path.join(tempFolder, isVideo ? 'input.mp4' : 'input.png');
   const outputPath = path.join(tempFolder, 'output.webp');
@@ -55,31 +51,33 @@ const createSticker = async (media, isVideo = false) => {
   fs.writeFileSync(inputPath, media);
 
   try {
-    let ffmpegCommand;
-    
-    if (isVideo) {
-      ffmpegCommand = `ffmpeg -i ${inputPath} -vf "scale=512:512:flags=lanczos,format=rgba" -r 10 -an -vsync vfr ${outputPath}`;
-    } else {
-      ffmpegCommand = `ffmpeg -i ${inputPath} -vf "scale=512:512:flags=lanczos" ${outputPath}`;
-    }
+    let ffmpegCommand = isVideo
+      ? `ffmpeg -i ${inputPath} -vf "scale='min(512,iw)':-1:flags=lanczos,format=rgba" -r 10 -an -vsync vfr ${outputPath}`
+      : `ffmpeg -i ${inputPath} -vf "scale='min(512,iw)':-1:flags=lanczos" ${outputPath}`;
 
     await new Promise((resolve, reject) => {
       exec(ffmpegCommand, (err, stdout, stderr) => {
         if (err) {
-          console.error(`[FFMPEG ERROR] ${stderr}`);
+          Connect.error(`[FFMPEG ERROR] ${stderr}`);
           return reject(new Error('FFmpeg gagal memproses media'));
         }
         resolve();
       });
     });
 
-    const sticker = fs.readFileSync(outputPath);
+    const sticker = new Sticker(outputPath, {
+      pack: footer,
+      author: botName,
+      type: StickerTypes.FULL,
+      quality: 100,
+    });
 
-    // Hapus file sementara
+    const buffer = await sticker.toBuffer();
+
     fs.unlinkSync(inputPath);
     fs.unlinkSync(outputPath);
 
-    return sticker;
+    return buffer;
   } catch (error) {
     Connect.error('❌ Gagal membuat stiker:', error.message);
 
@@ -92,7 +90,6 @@ const createSticker = async (media, isVideo = false) => {
 
 module.exports = { Connect, createSticker, download, Format };
 
-// Hot reload untuk file ini jika ada perubahan
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {
   fs.unwatchFile(file);
