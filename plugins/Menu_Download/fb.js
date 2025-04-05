@@ -27,16 +27,16 @@ module.exports = {
 
     if (!args[0]) {
       return conn.sendMessage(chatId, {
-        text: `🚨 *Format salah!*\nGunakan: *${prefix}fb <url>*`,
-      });
+        text: `🚨 *Format salah!*\nGunakan: *${prefix}fb <url>*`
+      }, { quoted: message });
     }
 
     const url = args[0];
 
     if (!/facebook\.\w+\/(reel|watch|share)/gi.test(url)) {
       return conn.sendMessage(chatId, {
-        text: `❌ *Masukkan URL Facebook yang valid!*`,
-      });
+        text: `❌ *Masukkan URL Facebook yang valid!*`
+      }, { quoted: message });
     }
 
     try {
@@ -46,15 +46,15 @@ module.exports = {
 
       if (!videoData || !videoData.video.length) {
         return conn.sendMessage(chatId, {
-          text: "⚠️ *Gagal mengambil video! Pastikan link valid dan publik.*",
-        });
+          text: "⚠️ *Gagal mengambil video! Pastikan link valid dan publik.*"
+        }, { quoted: message });
       }
 
       const bestQualityVideo = videoData.video[0]?.url;
       if (!bestQualityVideo) {
         return conn.sendMessage(chatId, {
-          text: "⚠️ *Video tidak ditemukan atau tidak dapat diunduh!*",
-        });
+          text: "⚠️ *Video tidak ditemukan atau tidak dapat diunduh!*"
+        }, { quoted: message });
       }
 
       const caption = `🎬 *Video Facebook Ditemukan!*\n\n📌 *Judul*: ${videoData.title || "Tidak diketahui"}\n⏳ *Durasi*: ${videoData.duration || "Tidak diketahui"}`;
@@ -62,17 +62,17 @@ module.exports = {
       await conn.sendMessage(chatId, {
         image: { url: videoData.thumbnail },
         caption,
-      });
+      }, { quoted: message });
 
       await conn.sendMessage(chatId, {
         video: { url: bestQualityVideo },
-        caption: "✅ *Berikut videonya!*",
-      });
+        caption: "✅ *Berikut videonya!*"
+      }, { quoted: message });
     } catch (err) {
       console.error(err);
       return conn.sendMessage(chatId, {
-        text: "⚠️ *Terjadi kesalahan, coba lagi nanti!*",
-      });
+        text: "⚠️ *Terjadi kesalahan, coba lagi nanti!*"
+      }, { quoted: message });
     }
   },
 };
