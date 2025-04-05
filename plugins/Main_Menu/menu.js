@@ -6,7 +6,7 @@ const readmore = more.repeat(4001);
 
 module.exports = {
   name: 'menu',
-  command: ['menu'],
+  command: ['menuall', 'menu'],
   tags: 'Info Menu',
 
   run: async (conn, message, { isPrefix }) => {
@@ -27,7 +27,9 @@ module.exports = {
 
     const senderNumber = message.pushName || 'Pengguna';
     const sender = `${senderNumber}`;
-    const menuText = getMenuText(sender);
+
+    const requestedCategory = args.length ? args.join(' ').toLowerCase() : null;
+    const menuText = getMenuText(sender, requestedCategory);
 
     const adReply = {
       contextInfo: {
@@ -53,7 +55,7 @@ module.exports = {
   }
 };
 
-function getMenuText(sender) {
+function getMenuText(sender, requestedCategory) {
   let menuText = `Halo *${sender}*, Saya adalah asisten virtual yang siap membantu.\n`;
   menuText += `Gunakan perintah di bawah untuk berinteraksi dengan saya.\n`;
   menuText += `> ⚠ Note:\n> Bot ini masih dalam tahap pengembangan,\n> jadi gunakan dengan bijak\n\n`;
@@ -80,15 +82,36 @@ function getMenuText(sender) {
 
   let sortedCategories = Object.keys(categorizedCommands).sort();
 
-  for (const category of sortedCategories) {
-    let commands = categorizedCommands[category];
+  if (requestedCategory) {
+    const matchedCategory = sortedCategories.find(cat =>
+      cat.toLowerCase().includes(requestedCategory)
+    );
+
+    if (!matchedCategory) {
+      menuText += `⚠ *Kategori '${requestedCategory}' tidak ditemukan!*\n`;
+      menuText += `Gunakan *.menuall* untuk melihat semua kategori yang tersedia.\n`;
+      return menuText;
+    }
+
+    let commands = categorizedCommands[matchedCategory];
     commands.sort();
 
-    menuText += `${head} ${Obrack} *${category}* ${Cbrack}\n`;
+    menuText += `${head} ${Obrack} *${matchedCategory}* ${Cbrack}\n`;
     commands.forEach((cmd) => {
       menuText += `${side} ${btn} ${isPrefix[0]}${cmd}\n`;
     });
     menuText += `${foot}${garis}\n\n`;
+  } else {
+    for (const category of sortedCategories) {
+      let commands = categorizedCommands[category];
+      commands.sort();
+
+      menuText += `${head} ${Obrack} *${category}* ${Cbrack}\n`;
+      commands.forEach((cmd) => {
+        menuText += `${side} ${btn} ${isPrefix[0]}${cmd}\n`;
+      });
+      menuText += `${foot}${garis}\n\n`;
+    }
   }
 
   menuText += `${Obrack} ${footer} ${Cbrack}`;
