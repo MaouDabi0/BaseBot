@@ -1,8 +1,7 @@
 {
   "ownerSetting": {
     "ownerNumber": [
-      "6285725892962",
-      "6285712168856"
+      "62857xxxx"
     ],
     "ownerName": "Kaju",
     "contact": "6285725892962",
@@ -13,7 +12,7 @@
       "fb": ""
     },
     "ownerStore": {
-      "dana": "6285725892962",
+      "dana": "",
       "gopay": "",
       "ovo": ""
     }
@@ -73,11 +72,7 @@
     "Other Menu": "Fitur lainnya"
   },
   "apikey": {
-    "kuromi": {
-      "key": "yn9dxsl9w4",
-      "web": "https://api-kuromi-jet.vercel.app"
-    },
-    "apikey2": {
+    "apikey1": {
       "key": "",
       "web": ""
     }
