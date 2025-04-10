@@ -15,11 +15,11 @@ module.exports = {
       const isGroup = chatId.endsWith("@g.us");
       const senderId = isGroup ? message.key.participant : chatId.replace(/:\d+@/, "@");
 
-      const messageText =
-        message.message?.conversation ||
-        message.message?.extendedTextMessage?.text ||
-        message.message?.imageMessage?.caption ||
-        message.message?.videoMessage?.caption ||
+      const messageText = 
+        message.message?.conversation || 
+        message.message?.extendedTextMessage?.text || 
+        message.message?.imageMessage?.caption || 
+        message.message?.videoMessage?.caption || 
         "";
 
       if (!messageText) return;
@@ -34,7 +34,9 @@ module.exports = {
         return conn.sendMessage(chatId, { text: "❌ Fitur ini hanya untuk pengguna premium!" }, { quoted: message });
       }
 
-      const stickerMessage = message.quoted?.stickerMessage || message.message?.stickerMessage;
+      const quotedMessage = message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+      const stickerMessage = quotedMessage?.stickerMessage || message.message?.stickerMessage;
+
       if (!stickerMessage) {
         return conn.sendMessage(chatId, { text: "⚠️ Harap balas atau kutip stiker untuk dikonversi ke gambar!" }, { quoted: message });
       }
