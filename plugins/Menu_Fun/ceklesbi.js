@@ -1,8 +1,8 @@
 module.exports = {
-  name: 'cekjomok',
-  command: ['cekjomok', 'cekgay'],
+  name: 'ceklesbi',
+  command: ['ceklesbi'],
   tags: 'Fun Menu',
-  desc: 'Cek seberapa jomok seseorang',
+  desc: 'Cek seberapa lesbi seseorang',
 
   run: async (conn, message, { isPrefix }) => {
     const chatId = message.key.remoteJid;
@@ -28,24 +28,24 @@ module.exports = {
       target = senderId;
     }
 
-    const persentase = Math.floor(Math.random() * 101);
+    const persentase = Math.floor(Math.random() * 101); // 0-100%
 
     let komentar;
     if (persentase <= 25) {
-      komentar = 'Masih aman lu bang';
+      komentar = 'Masih aman lu mbak';
     } else if (persentase <= 44) {
-      komentar = 'Agak lain lu bang';
+      komentar = 'Agak lain lu mbak';
     } else if (persentase <= 72) {
-      komentar = 'Waduh warga sungut lele';
+      komentar = 'Waduh warga pelangi?';
     } else if (persentase <= 88) {
-      komentar = 'Fiks jomok';
+      komentar = 'Fiks lesbi';
     } else {
-      komentar = 'Hati² orang jomok';
+      komentar = 'Hati² orang lesbi';
     }
 
     const mentionTarget = target.replace(/@s.whatsapp.net$/, '');
 
-    const teks = `*Cek seberapa jomok @${mentionTarget}*\n\n*${persentase}%* Jomok\n_${komentar}_`;
+    const teks = `*Cek seberapa lesbi @${mentionTarget}*\n\n*${persentase}%* Lesbi\n_${komentar}_`;
 
     await conn.sendMessage(chatId, {
       text: teks,
