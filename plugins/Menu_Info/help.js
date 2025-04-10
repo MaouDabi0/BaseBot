@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   name: 'help',
-  command: ['help'],
+  command: ['help', 'info'],
   tags: 'Info Menu',
   desc: 'Menampilkan informasi tentang command yang tersedia.',
 
@@ -25,7 +25,7 @@ module.exports = {
     if (!module.exports.command.includes(commandText)) return;
 
     if (!args.length) {
-      return conn.sendMessage(chatId, { text: `Gunakan perintah: ${prefix}help <name>` });
+      return conn.sendMessage(chatId, { text: `Gunakan perintah: ${prefix}help <name>` }, { quoted: message });
     }
 
     const pluginsDir = path.join(__dirname, '..'); 
@@ -45,7 +45,7 @@ module.exports = {
     }
 
     if (!foundPlugin) {
-      return conn.sendMessage(chatId, { text: `Command dengan nama *${args[0]}* tidak ditemukan.` });
+      return conn.sendMessage(chatId, { text: `Command dengan nama *${args[0]}* tidak ditemukan.` }, { quoted: message });
     }
 
     const { name, command, desc } = foundPlugin;
@@ -58,6 +58,6 @@ module.exports = {
       `${btn} *Deskripsi:* ${description}\n` +
       `${btn} *Penggunaan:* ${prefix}${command[0]} [opsional]`;
 
-    conn.sendMessage(chatId, { text: helpMessage });
+    conn.sendMessage(chatId, { text: helpMessage }, { quoted: message });
   }
 };

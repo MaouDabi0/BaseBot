@@ -31,13 +31,13 @@ module.exports = {
         return conn.sendMessage(chatId, { text: "⚠️ Database tidak ditemukan!" }, { quoted: message });
       }
 
-      let db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+      const db = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
 
       if (!db.Private || typeof db.Private !== "object") {
         return conn.sendMessage(chatId, { text: "⚠️ Database tidak valid atau rusak!" }, { quoted: message });
       }
 
-      let userData = Object.values(db.Private).find((u) => u.Nomor === senderId);
+      const userData = Object.values(db.Private).find((u) => u.Nomor === senderId);
 
       if (!userData) {
         return conn.sendMessage(chatId, { text: `⚠️ Kamu belum terdaftar di database!\n\nKetik *${prefix}daftar* untuk mendaftar.` }, { quoted: message });
@@ -67,13 +67,14 @@ module.exports = {
         }
       }
 
-      const profileText = `${head}${Obrack} *Profil ${userName}* ${Cbrack}
-${side} ${btn} *Nomor:* ${userData.Nomor.replace(/@s\.whatsapp\.net$/, "")}
-${side} ${btn} *Auto AI:* ${userData.autoai ? "Aktif ✅" : "Nonaktif ❌"}
-${side} ${btn} *Total Chat:* ${userData.chat}
-${side} ${btn} *Status Premium:* ${userData.premium?.prem ? "Ya ✅" : "Tidak ❌"}
-${side} ${btn} *Premium Tersisa:* ${premiumText}
-${foot}${garis}`;
+      let profileText = `${head}${Obrack} Profil ${userName} ${Cbrack}\n`;
+      profileText += `${side} ${btn} *Nomor:* ${userData.Nomor.replace(/@s\.whatsapp\.net$/, "")}\n`;
+      profileText += `${side} ${btn} *Auto AI:* ${userData.autoai ? "Aktif ✅" : "Nonaktif ❌"}\n`;
+      profileText += `${side} ${btn} *Total Chat:* ${userData.chat}\n`;
+      profileText += `${side} ${btn} *Status Premium:* ${userData.premium?.prem ? "Ya ✅" : "Tidak ❌"}\n`;
+      profileText += `${side} ${btn} *Premium Tersisa:* ${premiumText}\n`;
+      profileText += `${side} ${btn} *Nomor Id:* ${userData.noId || "Tidak ada"}\n`;
+      profileText += `${foot}━━━━━━━━━━━━━━━━`;
 
       await conn.sendMessage(
         chatId,
@@ -91,11 +92,12 @@ ${foot}${garis}`;
             forwardingScore: 1,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-              newsletterJid: '120363310100263711@newsletter',
-              serverMessageId: 152
+              newsletterJid: '120363310100263711@newsletter'
             }
           },
-        }, { quoted: message });
+        },
+        { quoted: message }
+      );
 
     } catch (error) {
       console.error("Error di plugin profile.js:", error);
