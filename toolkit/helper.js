@@ -69,7 +69,7 @@ const createSticker = async (media, isVideo = false) => {
       pack: footer,
       author: botName,
       type: StickerTypes.FULL,
-      quality: 100,
+      quality: 80,
     });
 
     const buffer = await sticker.toBuffer();
@@ -88,7 +88,13 @@ const createSticker = async (media, isVideo = false) => {
   }
 };
 
-module.exports = { Connect, createSticker, download, Format };
+const sifatlist = [
+  'Baik', 'Jahat', 'Lucu', 'Pemarah', 'Penyabar', 'Pemalu', 'Percaya Diri',
+  'Pemberani', 'Cengeng', 'Bijaksana', 'Pintar', 'Sombong', 'Rendah Hati',
+  'Setia', 'Cemburuan', 'Pelit', 'Dermawan', 'Pemalas', 'kek kontol', 'Rajin', 'Sensitif'
+];
+
+module.exports = { Connect, createSticker, download, Format, sifatlist };
 
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {

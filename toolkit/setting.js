@@ -57,6 +57,7 @@ Object.assign(global, {
     logic: setting.botSetting.logic,
     sewaList: toko.storeSetting.sewa || [],
     storeList: Object.keys(toko.storeSetting).filter(k => k !== 'sewa'),
+    kuromikey: setting.apikey.kuromi.key,
 
     ownerStore: {
         dana: setting.ownerSetting.ownerStore?.dana || 'Tidak tersedia',
