@@ -256,7 +256,7 @@ if (!module.exports.command.includes(commandText)) return;
 - - -
 
 ## Request & Fix 
-   laporkan Bug ke [sini](https://wa.me/6285712168856?text=halo+kak+aku+ingin+melaporkan+bug)
+   laporkan Bug ke [sini](https://wa.me/6285725892962?text=halo+kak+aku+ingin+melaporkan+bug)
 
 # (C)
 <div align="left">
