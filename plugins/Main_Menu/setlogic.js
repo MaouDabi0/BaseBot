@@ -29,11 +29,17 @@ module.exports = {
 
     const ownerNumbers = getConfig().ownerSetting.ownerNumber;
     if (!ownerNumbers.includes(senderId.replace(/\D/g, ''))) {
-      return conn.sendMessage(chatId, { text: '❌ Hanya owner yang dapat menggunakan perintah ini.'}, { quoted: message });
+      return conn.sendMessage(chatId, { text: '❌ Hanya owner yang dapat menggunakan perintah ini.' }, { quoted: message });
     }
 
     if (args.length === 0) {
-      return conn.sendMessage(chatId, { text: `⚙️ Gunakan perintah:\n${prefix}setlogic [teks logika]\n\n📌 Contoh:\n${prefix}setlogic Ini adalah logika baru.` }, { quoted: message });
+      const config = getConfig();
+      const botName = config.botSetting.botName || 'Bot'; // fallback kalau botName kosong
+      const currentLogic = config.botSetting.logic || 'Belum disetel.';
+
+      return conn.sendMessage(chatId, {
+        text: `⚙️ Gunakan perintah:\n${prefix}setlogic [teks logika]\n\n📌 Contoh:\n${prefix}setlogic Ini adalah logika baru.\n\n*Logika saat ini (${botName}):*\n${currentLogic}`
+      }, { quoted: message });
     }
 
     const newLogic = args.join(" ");
